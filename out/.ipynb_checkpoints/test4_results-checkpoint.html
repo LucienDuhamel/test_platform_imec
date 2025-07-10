@@ -14,7 +14,7 @@
 }
 
 div.main {
-  width: 60vw; /* 50% of the viewport width */
+  width: 50vw; /* 50% of the viewport width */
   height: 100vh; /* Full height of the screen */
   background-color: #000000; /* Black background */
   margin: 0 auto; /* Center horizontally */
@@ -25,7 +25,7 @@ div.main {
 }
 
 div.compare {
-    width: 52vw;
+    width: 45vw;
     border: medium solid rgb(255, 255, 255);
     background-color: rgba(0, 0, 100, 0.3);
     padding: 20px;
@@ -140,31 +140,25 @@ h2.compare {
 <p style="color:rgb(230, 230, 230);"> 
     The compared data are the same : test <span style="color:rgb(255, 255, 255); background-color: rgb(0, 179, 0);"> SUCCESSFUL : </span> <br> 
         the ref data is : FFFFFFFF	56789ABC	 <br>
-        the tested data is : FFFFFFFF	56789ABC	 
+        the read byte is : FFFFFFFF	56789ABC	 
         </p>
 </div> 
 <p style="color:rgb(230, 230, 230);">Command REGWR at address 04: Finished Writing                00000004	00000000	  
 </p>
 <p style="color:rgb(230, 230, 230);">Command B2 at address 04: Finished Reading from send_back 00000004	00000000	  
 </p>
-<p style="color:rgb(230, 230, 230);">Command REGWR at address 18: Finished Writing                0000F000	00002000	  
+<p style="color:rgb(230, 230, 230);">Command REGWR at address 18: Finished Writing                00000F000	00002000	  
 </p>
-<p style="color:rgb(230, 230, 230);">Command B2 at address 18: Finished Reading from send_back 0000F000	00002000	  
+<p style="color:rgb(230, 230, 230);">Command B2 at address 18: Finished Reading from send_back 000000F0	00000020	00	  
 </p>
  <div class= "compare"> 
   <h2 class= "compare"> Comparison of read data and reference data : </h2> 
- <p style="color:rgb(230, 230, 230);"> 
-        **** Command #%4d: Last Reg read value (masked) = 0000F000
-        is equal to compared value =                      0000F000 **** 
-        </p>
+ <p style="color:rgb(230, 230, 230);"> <span style="color:rgb(255, 255, 255);  background-color: rgb(255, 0, 0);"> ERROR : </span> Both number of hex packets does not match : got 3; should be 2 
+</p>
 <p style="color:rgb(230, 230, 230);"> 
-        **** Command #%4d: Last Reg read value (masked) = 00002000
-        is equal to compared value =                      00002000 **** 
-        </p>
-<p style="color:rgb(230, 230, 230);"> 
-    The compared data are the same : test <span style="color:rgb(255, 255, 255); background-color: rgb(0, 179, 0);"> SUCCESSFUL : </span> <br> 
-        the ref data is : 0000F000	00002000	 <br>
-        the tested data is : 0000F000	00002000	 
+    The compared data are not the same : test <span style="color:rgb(255, 255, 255);  background-color: rgb(255, 0, 0);"> ERROR : </span> <br> 
+        the tested data is : 00000F000	00002000	 <br> 
+        the read byte is : 000000F0	00000020	00	 
         </p>
 </div> 
 <p style="color:rgb(230, 230, 230);">Command REGWR at address 18: Finished Writing                0000000FF	00000007	  
@@ -203,13 +197,13 @@ h2.compare {
  </p>
 <p style="color:rgb(230, 230, 230);"> 
     The compared data are not the same : test <span style="color:rgb(255, 255, 255);  background-color: rgb(255, 0, 0);"> ERROR : </span> <br> 
-        the ref data is : 00000000	00000000	00000000	00000000	00000000	00000000	00000000	00000001	 <br> 
-        the tested byte is : 43D1E46F	150D87BA	85A868EF	7E9532E8	0E1A588A	B0ED72C8	BF934E58	045EDCBD	 
+        the tested data is : 00000000	00000000	00000000	00000000	00000000	00000000	00000000	00000001	 <br> 
+        the read byte is : 43D1E46F	150D87BA	85A868EF	7E9532E8	0E1A588A	B0ED72C8	BF934E58	045EDCBD	 
         </p>
 </div> 
-<p style="color:rgb(230, 230, 230);">Command REGWR at address 18: Finished Writing                000000FF	00000002	  
+<p style="color:rgb(230, 230, 230);">Command REGWR at address 18: Finished Writing                0000000FF	00000002	  
 </p>
-<p style="color:rgb(230, 230, 230);">Command B2 at address 18: Finished Reading from send_back 000000FF	00000002	  
+<p style="color:rgb(230, 230, 230);">Command B2 at address 18: Finished Reading from send_back 00000000	FF000000	02	  
 </p>
 <p style="color:rgb(230, 230, 230);">Command MEMWR at address 1A0: Finished Writing                EA51D0E5	784ECFFC	FF1F4047	843D1637	4141CAAC	0225BE28	80AA65D1	3FA9C149	  
 </p>
@@ -340,7 +334,7 @@ h2.compare {
 <p style="color:rgb(230, 230, 230);"> 
     The compared data are the same : test <span style="color:rgb(255, 255, 255); background-color: rgb(0, 179, 0);"> SUCCESSFUL : </span> <br> 
         the ref data is : FFFFFFFF	00002000	 <br>
-        the tested data is : FFFFFFFF	00002000	 
+        the read byte is : FFFFFFFF	00002000	 
         </p>
 </div> 
 <p style="color:rgb(230, 230, 230);">Command REGWR at address 100: Finished Writing                FFFFFFFF	FFFFFFFF	  
@@ -381,8 +375,8 @@ h2.compare {
 </p>
 <p style="color:rgb(230, 230, 230);"> 
     The compared data are not the same : test <span style="color:rgb(255, 255, 255);  background-color: rgb(255, 0, 0);"> ERROR : </span> <br> 
-        the ref data is : 4A51D0E5	784ECFFC	FF1F4047	843D1637	4141CAAC	0225BE20	80AA65D1	3FA9C149	 <br> 
-        the tested byte is : FFFFFFFF	5FFFFFFF	 
+        the tested data is : 4A51D0E5	784ECFFC	FF1F4047	843D1637	4141CAAC	0225BE20	80AA65D1	3FA9C149	 <br> 
+        the read byte is : FFFFFFFF	5FFFFFFF	 
         </p>
 </div> 
 <p style="color:rgb(230, 230, 230);">Command REGWR at address C0: Finished Writing                FFFFFFFF	00000000	  
@@ -399,8 +393,8 @@ h2.compare {
 </p>
 <p style="color:rgb(230, 230, 230);"> 
     The compared data are not the same : test <span style="color:rgb(255, 255, 255);  background-color: rgb(255, 0, 0);"> ERROR : </span> <br> 
-        the ref data is : 00000000	00000000	00000000	00000000	00000000	00000000	00000000	00000000	 <br> 
-        the tested byte is : 000001FF	00000023	 
+        the tested data is : 00000000	00000000	00000000	00000000	00000000	00000000	00000000	00000000	 <br> 
+        the read byte is : 000001FF	00000023	 
         </p>
 </div> 
 <p style="color:rgb(230, 230, 230);">Command REGWR at address 18: Finished Writing                000001FF	00000003	  
@@ -413,8 +407,8 @@ h2.compare {
 </p>
 <p style="color:rgb(230, 230, 230);"> 
     The compared data are not the same : test <span style="color:rgb(255, 255, 255);  background-color: rgb(255, 0, 0);"> ERROR : </span> <br> 
-        the ref data is : 23DA7126	FD93AF8A	E6898B64	93A0BA3A	8BC5A0C7	C737D1C6	8FEE7AF6	CE5EC222	 <br> 
-        the tested byte is : 000001FF	00000003	 
+        the tested data is : 23DA7126	FD93AF8A	E6898B64	93A0BA3A	8BC5A0C7	C737D1C6	8FEE7AF6	CE5EC222	 <br> 
+        the read byte is : 000001FF	00000003	 
         </p>
 </div> 
 <p style="color:rgb(230, 230, 230);">Command REGWR at address 18: Finished Writing                000001FF	0000000B	  
@@ -427,8 +421,8 @@ h2.compare {
 </p>
 <p style="color:rgb(230, 230, 230);"> 
     The compared data are not the same : test <span style="color:rgb(255, 255, 255);  background-color: rgb(255, 0, 0);"> ERROR : </span> <br> 
-        the ref data is : 00000000	00000000	00000000	00000000	00000000	00000000	00000000	00000001	 <br> 
-        the tested byte is : 000001FF	0000000B	 
+        the tested data is : 00000000	00000000	00000000	00000000	00000000	00000000	00000000	00000001	 <br> 
+        the read byte is : 000001FF	0000000B	 
         </p>
 </div> 
 <p style="color:rgb(230, 230, 230);">Command REGWR at address 18: Finished Writing                000001FF	00000000	  
@@ -449,8 +443,8 @@ h2.compare {
 </p>
 <p style="color:rgb(230, 230, 230);"> 
     The compared data are not the same : test <span style="color:rgb(255, 255, 255);  background-color: rgb(255, 0, 0);"> ERROR : </span> <br> 
-        the ref data is : 00000000	00000000	00000000	00000000	00000000	00000000	00000000	00000000	 <br> 
-        the tested byte is : 000001FF	00000004	 
+        the tested data is : 00000000	00000000	00000000	00000000	00000000	00000000	00000000	00000000	 <br> 
+        the read byte is : 000001FF	00000004	 
         </p>
 </div> 
 <p style="color:rgb(230, 230, 230);">Command REGWR at address 18: Finished Writing                000001FF	00000000	  
@@ -463,8 +457,8 @@ h2.compare {
 </p>
 <p style="color:rgb(230, 230, 230);"> 
     The compared data are not the same : test <span style="color:rgb(255, 255, 255);  background-color: rgb(255, 0, 0);"> ERROR : </span> <br> 
-        the ref data is : D5E6765C	8157FFC9	F3A780EF	91A9DA0B	A0DF068F	CBD857DF	43B50BB7	D6B59DA0	 <br> 
-        the tested byte is : 000001FF	00000000	 
+        the tested data is : D5E6765C	8157FFC9	F3A780EF	91A9DA0B	A0DF068F	CBD857DF	43B50BB7	D6B59DA0	 <br> 
+        the read byte is : 000001FF	00000000	 
         </p>
 </div> 
 </div> 
