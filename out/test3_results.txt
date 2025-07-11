@@ -1,0 +1,103 @@
+Results from test3 
+ 
+ERROR : unable to parse line: WAIT_NS FERROR : Unknown command: ENABLE_AMSCommand REGWR at address 404: Finished Writing             FF	01	  
+Command B2 at address 0404: Finished Reading from send_back FF01	  
+Command REGWR at address 404: Finished Writing             FF	03	  
+Command B2 at address 0404: Finished Reading from send_back FF03	  
+Command REGWR at address 404: Finished Writing             FF	0F	  
+Command B2 at address 0404: Finished Reading from send_back FF0F	  
+ERROR : Unknown command: WAIT_NSCommand REGWR at address 10: Finished Writing             FF	03	  
+Command B2 at address 10: Finished Reading from send_back FF03	  
+Command REGWR at address 0: Finished Writing             654321FF	CBA9871F	  
+Command B2 at address 00: Finished Reading from send_back 654321FF	CBA9871F	  
+Command REGWR at address 0: Finished Writing             452301FF	0	  
+Command B2 at address 00: Finished Reading from send_back 452301FF	00	  
+Command REGWR at address 20: Finished Writing             FFFFFFFF	22222222	  
+Command B2 at address 20: Finished Reading from send_back FFFFFFFF	22222222	  
+Command REGWR at address 24: Finished Writing             FFFFFFFF	00020002	  
+Command B2 at address 24: Finished Reading from send_back FFFFFFFF	00020002	  
+Command REGWR at address 28: Finished Writing             FFFFFFFF	00020000	  
+Command B2 at address 28: Finished Reading from send_back FFFFFFFF	00020000	  
+Command REGWR at address 2C: Finished Writing             FFFFFFFF	00000002	  
+Command B2 at address 2C: Finished Reading from send_back FFFFFFFF	00000002	  
+Command REGWR at address 30: Finished Writing             FFFFFFFF	00020002	  
+Command B2 at address 30: Finished Reading from send_back FFFFFFFF	00020002	  
+Command REGWR at address 34: Finished Writing             00FFFFFF	00091309	  
+Command B2 at address 34: Finished Reading from send_back 00FFFFFF	00091309	  
+Command REGWR at address 44: Finished Writing             00FFFFFF	00091309	  
+Command B2 at address 44: Finished Reading from send_back 00FFFFFF	00091309	  
+Command REGWR at address 54: Finished Writing             00FFFFFF	00091309	  
+Command B2 at address 54: Finished Reading from send_back 00FFFFFF	00091309	  
+Command REGWR at address 64: Finished Writing             00FFFFFF	0013080B	  
+Command B2 at address 64: Finished Reading from send_back 00FFFFFF	0013080B	  
+Command REGWR at address 74: Finished Writing             00FFFFFF	0013080B	  
+Command B2 at address 74: Finished Reading from send_back 00FFFFFF	0013080B	  
+Command REGWR at address 84: Finished Writing             00FFFFFF	00091309	  
+Command B2 at address 84: Finished Reading from send_back 00FFFFFF	00091309	  
+Command REGWR at address 94: Finished Writing             00FFFFFF	0013080B	  
+Command B2 at address 94: Finished Reading from send_back 00FFFFFF	0013080B	  
+Command REGWR at address A4: Finished Writing             00FFFFFF	00011212	  
+Command B2 at address A4: Finished Reading from send_back 00FFFFFF	00011212	  
+Command REGWR at address B0: Finished Writing             FFFFFFFF	56789ABC	  
+Command B2 at address B0: Finished Reading from send_back FFFFFFFF	56789ABC	  
+ 
+ Comparison of read data and reference data 
+ **** Command #%4d: Last Reg read value (masked) = FFFFFFFF
+        is equal to compared value =      FFFFFFFF **** 
+  **** Command #%4d: Last Reg read value (masked) = 56789ABC
+        is equal to compared value =      56789ABC **** 
+  The compared data are the same : test SUCCESSFUL :
+        the ref data is : FFFFFFFF	56789ABC	 
+        the read byte is : FFFFFFFF	56789ABC	 
+ 
+Command REGWR at address 18: Finished Writing             000001FF	00000000	  
+Command B2 at address 18: Finished Reading from send_back 000001FF	00000000	  
+Command REGWR at address 04: Finished Writing             00000004	00000000	  
+Command B2 at address 04: Finished Reading from send_back 00000004	00000000	  
+Command REGWR at address 18: Finished Writing             00000100	00000100	  
+Command B2 at address 18: Finished Reading from send_back 00000100	00000100	  
+Command REGWR at address FC: Finished Writing             FFFFFFFF	80000000	  
+Command B2 at address FC: Finished Reading from send_back FFFFFFFF	80000000	  
+ 
+ Comparison of read data and reference data 
+ **** Command #%4d: Last Reg read value (masked) = FFFFFFFF
+        is equal to compared value =      FFFFFFFF **** 
+  **** Command #%4d: Last Reg read value (masked) = 80000000
+        is equal to compared value =      80000000 **** 
+  The compared data are the same : test SUCCESSFUL :
+        the ref data is : FFFFFFFF	80000000	 
+        the read byte is : FFFFFFFF	80000000	 
+ 
+Command REGWR at address 100: Finished Writing             FFFFFFFF	FFFFFFFF	  
+Command B2 at address 0100: Finished Reading from send_back FFFFFFFF	FFFFFFFF	  
+Command REGWR at address 104: Finished Writing             FFFFFFFF	FFFFFFFF	  
+Command B2 at address 0104: Finished Reading from send_back FFFFFFFF	FFFFFFFF	  
+Command REGWR at address 108: Finished Writing             FFFFFFFF	FFFFFFFF	  
+Command B2 at address 0108: Finished Reading from send_back FFFFFFFF	FFFFFFFF	  
+Command REGWR at address 10C: Finished Writing             FFFFFFFF	FFFFFFFF	  
+Command B2 at address 010C: Finished Reading from send_back FFFFFFFF	FFFFFFFF	  
+Command REGWR at address 110: Finished Writing             FFFFFFFF	FFFFFFFF	  
+Command B2 at address 0110: Finished Reading from send_back FFFFFFFF	FFFFFFFF	  
+Command REGWR at address 114: Finished Writing             FFFFFFFF	FFFFFFFF	  
+Command B2 at address 0114: Finished Reading from send_back FFFFFFFF	FFFFFFFF	  
+Command REGWR at address 118: Finished Writing             FFFFFFFF	FFFFFFFF	  
+Command B2 at address 0118: Finished Reading from send_back FFFFFFFF	FFFFFFFF	  
+Command REGWR at address 11C: Finished Writing             FFFFFFFF	FFFFFFFF	  
+Command B2 at address 011C: Finished Reading from send_back FFFFFFFF	FFFFFFFF	  
+Command MEMWRM at address None: Finished Writing             4AA048FE	8ECCB049	ED897645	2CFC3694	9D192726	6C6CF3B4	0FE305B3	2E1FCDED	  
+Command F6 at address None: Finished Reading from send_back 4AA048FE	8ECCB049	ED897645	2CFC3694	9D192726	6C6CF3B4	0FE305B3	2E1FCDED	  
+Command REGWR at address 10: Finished Writing             01	00	  
+Command B2 at address 10: Finished Reading from send_back 0100	  
+Command REGWR at address 14: Finished Writing             FFFF	0001	  
+Command B2 at address 14: Finished Reading from send_back FFFF0001	  
+Command REGWR at address 10: Finished Writing             01	01	  
+Command B2 at address 10: Finished Reading from send_back 0101	  
+Command REGWR at address 10: Finished Writing             01	00	  
+Command B2 at address 10: Finished Reading from send_back 0100	  
+ 
+ Comparison of read data and reference data 
+ERROR : Both number of hex packets does not match : got 1; should be 8 
+         The compared data are not the same : ERROR : 
+             the ref data is : 4AA048FE	8ECCB049	ED897645	2CFC3694	9D192726	6C6CF3B4	0FE305B3	2E1FCDED	 
+             the tested byte is : 0100	 
+ End of results for this file

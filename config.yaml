@@ -3,7 +3,7 @@
 
 SPI_FREQ : 9e6
 REF_FREQ : 1e6
-LAUNCH_CONFIG :
+LAUNCH_CONFIG : # single test and all test config cannot be used both at the same time
   single_test : 
     bool : 0
     test_file : "test1" 
@@ -16,16 +16,21 @@ LAUNCH_CONFIG :
 TEST_FILE :
   nb_hex_per_packet : 8
   
-RESULT_FILE : 
-  name : "test1" # don't forget to change this if you want to keep previous results
-  title_color : "rgb(0, 153, 255)"
-  text_colors :
-    default_color : "rgb(230, 230, 230)"
-    error_color : "rgb(255, 255, 255)"
-    validation_color : "rgb(255, 255, 255)"
-  highlight_colors :
-    error_color : "rgb(255, 0, 0)"
-    validation_color : "rgb(0, 179, 0)"
+RESULT_FILE : # print_msg, txt_config and html_onfig can all be used at the same time 
+  print_msg : # once activated : prints every message from the functions in messages.ipynb : try not to use it in all tests config : output could be long ...
+    bool : 0
+  txt_config :
+    bool : 1
+  html_config :
+    bool : 1
+    title_color : "rgb(0, 153, 255)"
+    text_colors :
+      default_color : "rgb(230, 230, 230)"
+      error_color : "rgb(255, 255, 255)"
+      validation_color : "rgb(255, 255, 255)"
+    highlight_colors :
+      error_color : "rgb(255, 0, 0)"
+      validation_color : "rgb(0, 179, 0)"
     
 STYLE_RESULT_FILE : "style.css"
 CHOSEN_PLATFORM : PYNQ
