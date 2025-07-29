@@ -4,10 +4,10 @@
 // Desciption:
 //   Some clock swithing between various read/writes
 
-//Enable clock to internal
+// Enable clock to internal
 // --------------------------------------------------------------------
 // Enable AMS
-ENABLE_AMS
+// ENABLE_AMS
 // idac_en, then vco_en, then clk_freqdiv_en, then clk_direct_en
 REGWR 404 FF 01
 REGWR 404 FF 03
@@ -88,7 +88,7 @@ REGRD 20
 REGWR 18 000001FF 00000000
 
 // **** Need to Disable the bist before memeory transactions
-REGWR 04 00000004 00000000
+REGWR 04 00000002 00000000
 REGRD 04
 
 // Write through a mask
@@ -128,7 +128,7 @@ MEMWRM 4AA048FE 8ECCB049 ED897645 2CFC3694 9D192726 6C6CF3B4 0FE305B3 2E1FCDED
 REGWR 10 01 00
 // As a test change the clock division to half
 REGWR 14 FFFF 0001
-//Switch back to internal clock (now divided by 2)
+// Switch back to internal clock (now divided by 2)
 REGWR 10 01 01
 
 //read the value back
@@ -139,4 +139,3 @@ REGWR 10 01 00
 
 //Compare if the read value is same
 MEMCMP 4AA048FE 8ECCB049 ED897645 2CFC3694 9D192726 6C6CF3B4 0FE305B3 2E1FCDED
-

@@ -4,25 +4,26 @@
 
 //Switch the clock to internal
 // --------------------------------------------------------------------
-// Enable AMS
-ENABLE_AMS
-// idac_en, then vco_en, then clk_freqdiv_en, then clk_direct_en
-REGWR 404 FF 01
-REGWR 404 FF 03
-REGWR 404 FF 0F
+
+// DISABLE_AMS
+
+// Reset modules
+REGWR 0 654321FF CBA9871F
+REGRD 0
+// Deassert rests
+REGWR 0 452301FF 0
+
+// Enabled by default
+// // idac_en, then vco_en, then clk_freqdiv_en, then clk_direct_en
+// REGWR 404 FF 01
+// REGWR 404 FF 03
+// REGWR 404 FF 0F
 
 // Wait a bit
 WAIT_NS F
 
 // Switch from ref clk to internal VCO clk
 REGWR 10 FF 03
-
-// Reset modules
-// --------------------------------------------------------------------
-REGWR 0 654321FF CBA9871F
-REGRD 0
-// Deassert resets
-REGWR 0 452301FF 0
 
 // Array conf
 // --------------------------------------------------------------------
@@ -36,88 +37,35 @@ REGWR 0 452301FF 0
 // PL_RD    = 0(12)1( 9)0(19)
 // SAEN     = 0(19)1(19)0( 2)
 // First do 3 toggels of correct duration
-REGWR 20 FFFFFFFF 22222222
-REGRD 20
-// WL rd and wr
-REGWR 24 FFFFFFFF 00020002
-REGRD 24
-// BL (write) 0 and 1
-REGWR 28 FFFFFFFF 00020000
-REGRD 28
-// PL write 0 and 1
-REGWR 2C FFFFFFFF 00000002
-REGRD 2C
-// PL read  and saen
-REGWR 30 FFFFFFFF 00020002
-REGRD 30
-// WL wr toggels 0 to 2 (-1 val)
-REGWR 34 00FFFFFF 00091309
-REGRD 34
-// WL rd toggels 0 to 2 (-1 val)
-REGWR 44 00FFFFFF 00091309
-REGRD 44
-// BL (write) 0 toggels 0 to 2 (-1 val)
-REGWR 54 00FFFFFF 00091309
-REGRD 54
-// BL (write) 1 toggels 0 to 2 (-1 val)
-REGWR 64 00FFFFFF 0013080B
-REGRD 64
-// PL write 0 toggels 0 to 2 (-1 val)
-REGWR 74 00FFFFFF 0013080B
-REGRD 74
-// PL write 1 toggels 0 to 2 (-1 val)
-REGWR 84 00FFFFFF 00091309
-REGRD 84
-// PL read toggels 0 to 2 (-1 val)
-REGWR 94 00FFFFFF 0013080B
-REGRD 94
-// SAEN (read) toggels 0 to 2 (-1 val)
-REGWR A4 00FFFFFF 00011212
-REGRD A4
-// SAEN cfg_rd_array_len_m1_saen_15 to ___12 write a dummy value and read
-REGWR B0 FFFFFFFF 56789ABC
-REGRD B0
-REGCMP FFFFFFFF 56789ABC
 
-// Read again some other value
-REGRD 20
+//Don't do as use default
 
-// Selec Array 0 (and not use mask) 
-REGWR 18 0000001FF 00000000
-// **** Need to Disable the bist before memeory transactions
-REGWR 04 00000004 00000000
-REGRD 04
-
-//As a test change the cfg_busy_delay_m1 to 2 (delay of 3), anything less than this does not work with current pipeline delay 
-REGRD 18
-REGWR 18 00000F000 00002000
-REGRD 18
-REGCMP 00000F000 00002000
+// // As a test change the cfg_busy_delay_m1 to 2 (delay of 3), anything less than this does not work with current pipeline delay 
+// REGRD 18
+// REGWR 18 00000F000 00002000
+// REGRD 18
+// REGCMP 00000F000 00002000
 
 /////////////////////////
-// BIST
+// BIST CONF/START/STOP/STEP
 /////////////////////////
-// Enable bist in system
-REGWR 4 0000000F F
+
+// with 200 ADDR per block (i.e. count of failures in each block of that many addrs)
+REGWR 200 00003FFF 200
 
 // BIST dec count
-// with 200 ADDR per block (i.e. count of failures in each block of that many addrs)
-// REGWR 200 00000200 200
-// BIST inc count
-// with 200 ADDR per block (i.e. count of failures in each block of that many addrs)
-REGWR 200 04000200 04000200
+REGWR 200 4000000 0000000
 
-// BIST ADDR LOW
-REGWR 204 00001FFF 0
+// BIST ADDR START (Included if decremental)
+REGWR 204 00003FFF 0
 
-// BIST ADDR HIGH
-// 10 addresses (32*10-32) = 120
-REGWR 208 00001FFF 120
+// BIST ADDR STOP (Included if decremental)
+REGWR 208 00003FFF 120
 // Whole coverage:
-// REGWR 208 00001FFF 1FFF
+// REGWR 208 00003FFF 3FE0
 
 // BIST ADDR STEP (32 in hex)
-REGWR 20C 000000FF 20
+REGWR 20C 000003FF 20
 
 // 3 cycles per addr
 REGWR 300 00000003 00000003
@@ -128,10 +76,31 @@ REGWR 298 00000003 00000002
 // Enable bist HALT mode
 REGWR 200 08000000 08000000
 
-// Disable bist rst_n
-REGWR 200 80000000 80000000
+// Selec Array 0 (and not use mask) 
+REGWR 18 0000001FF 00000000
+// **** Need to Disable the bist before memeory transactions
+REGWR 04 00000002 00000000
+REGRD 04
 
+//As a test change the cfg_busy_delay_m1 to 2 (delay of 3), anything less than this does not work with current pipeline delay 
+REGRD 18
+REGWR 18 00000F000 00002000
+REGRD 18
+REGCMP 00000F000 00002000
+
+// Enable AMS
+ENABLE_AMS
+
+/////////////////////////
+// BIST
+/////////////////////////
+// Enable bist in system
+REGWR 4 0000000F F
+
+// Disable bist reset request
+REGWR 0 00000002 00000000
 // Enable bist ce
+//REGWR 4 00000002 00000001
 REGWR 200 40000000 40000000
 
 // Wait till tests start
@@ -144,3 +113,8 @@ BEHR 5A
 
 // Wait till tests finish
 WTSV busy_o 0
+
+// FAKE errors true, so expecting 5A there should be no errors
+REGWR 348 FFFFFFFF 5A
+REGRD 348
+REGCMP FFFFFFFF 5A

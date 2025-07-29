@@ -78,7 +78,7 @@ REGRD 20
 REGWR 18 0000001FF 00000000
 REGRD 18
 // **** Need to Disable the bist before memeory transactions
-REGWR 04 00000004 00000000
+REGWR 04 00000002 00000000
 REGRD 04
 
 //As a test change the cfg_busy_delay_m1 to 2 (delay of 3), anything less than this does not work with current pipeline delay 

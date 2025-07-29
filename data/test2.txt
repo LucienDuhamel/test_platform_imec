@@ -8,7 +8,7 @@
 //Switch the clock to internal
 // --------------------------------------------------------------------
 // Enable AMS
-ENABLE_AMS
+// ENABLE_AMS
 // idac_en, then vco_en, then clk_freqdiv_en, then clk_direct_en
 REGWR 404 FF 01
 REGWR 404 FF 03
@@ -89,11 +89,11 @@ REGRD 20
 // Selec Array 0 (and not use mask) 
 REGWR 18 0000001FF 00000000
 // **** Need to Disable the bist before memeory transactions
-REGWR 04 00000004 00000000
+REGWR 04 00000002 00000000
 REGRD 04
 // Do a read/write cycle on MEM (this is WL 2BE0 >> 5 | 1F = d'351, i.e. 352th array)
 MEMWR 2BE0 12345678 9ABCDEF0 87654321 0FEDCBA9 55555555 66666666 77777777 88888888
-//Note A=4'b1010 (it will ignore two most significant bits hence ABE0 sould read the 2BE0 (just do this as a check right bit cutoff)
+// Note A=4'b1010 (it will ignore two most significant bits hence ABE0 sould read the 2BE0 (just do this as a check right bit cutoff)
 MEMRD ABE0
 
 // Use mask now (still Array 0) but read/write same address 2BE0

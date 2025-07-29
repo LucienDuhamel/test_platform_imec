@@ -1,28 +1,32 @@
 # This file will contains every data used 
 # to configure the tests.
 
-SPI_FREQ : 9e6
-REF_FREQ : 1e6
 LAUNCH_CONFIG : # single test and all test config cannot be used both at the same time
   single_test : 
-    bool : 0
-    test_file : "test1" 
-  all_tests :  # Without IGNORED_TEST_FILE
-    bool : 1
+    activate : 1
+    test_file : "test_mem1" 
+  all_tests :  # Without IGNORED_TEST_FILES
+    activate : 0
     ignored_test_files : 
-      - .ipynb_checkpoints
+      - .ipynb_checkpoints  # don't remove this one
+  max_while_iterations : 1000
   activate_exceptions : 0 #choose 1 to activate exceptions when an error occurs and 0 to desactivate it
   
 TEST_FILE :
-  nb_hex_per_packet : 8
+  nb_of_token_for_cmd : 1
+  nb_bytes_per_token_cmd :  1
+  nb_bytes_per_token_addr : 2
+  nb_bytes_per_token_data : 4
+  
   
 RESULT_FILE : # print_msg, txt_config and html_onfig can all be used at the same time 
-  print_msg : # once activated : prints every message from the functions in messages.ipynb : try not to use it in all tests config : output could be long ...
-    bool : 0
+  print_msg : # once activated : prints every message from the functions in messages.ipynb : try not to 
+              # use it in "all_tests" config : output could be long ...
+    activate : 1
   txt_config :
-    bool : 1
+    activate : 1
   html_config :
-    bool : 1
+    activate : 1
     title_color : "rgb(0, 153, 255)"
     text_colors :
       default_color : "rgb(230, 230, 230)"
@@ -33,14 +37,17 @@ RESULT_FILE : # print_msg, txt_config and html_onfig can all be used at the same
       validation_color : "rgb(0, 179, 0)"
     
 STYLE_RESULT_FILE : "style.css"
-CHOSEN_PLATFORM : PYNQ
-PLATFORMS : 
-  - name : PYNQ
-    SPI_CLK : #TO DO
-    MISO : #TO DO
-    MOSI : #TO DO
-    SS : #TO DO
-  - name : RPi 
-    MAX_SPEED_HZ : 5000
-    MODE : 1 # SPI mode as two bit pattern of clock polarity and phase [CPOL|CPHA], min: 0b00 = 0, max: 0b11 = 3
-  - name : virtual
+
+
+HARDWARE:
+  CHOSEN_PLATFORM : PYNQ
+  PLATFORMS : 
+    - name : PYNQ
+    - SPI_FREQ : 9e6 # TO DO 
+    - name : RPi 
+      MAX_SPEED_HZ : 5000
+      MODE : 1 # SPI mode as two bit pattern of clock polarity and phase [CPOL|CPHA], so 4 modes :[0;3]
+    - name : virtual
+    
+  
+            

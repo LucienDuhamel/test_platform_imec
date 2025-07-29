@@ -1,5 +1,5 @@
 namespace eval ::optrace {
-  variable script "C:/Users/duhame01/Vivado_projects/spi_interface_new/spi_interface_new.runs/impl_1/design_qspi_wrapper.tcl"
+  variable script "/imec/users/duhame01/vivado_projects/test_platform_kairos/test_platform_kairos.runs/impl_1/test_platform_kairos_wrapper.tcl"
   variable category "vivado_impl"
 }
 
@@ -97,7 +97,6 @@ proc step_failed { step } {
 OPTRACE "impl_1" END { }
 }
 
-set_msg_config -id {HDL-1065} -limit 10000
 set_msg_config  -id {17-179}  -suppress 
 set_msg_config  -id {17-179}  -suppress 
 set_msg_config  -id {17-179}  -suppress 
@@ -110,26 +109,24 @@ start_step write_bitstream
 set ACTIVE_STEP write_bitstream
 set rc [catch {
   create_msg_db write_bitstream.pb
-  set_param tcl.collectionResultDisplayLimit 0
-  set_param chipscope.maxJobs 3
-  set_param xicom.use_bs_reader 1
-  set_param runs.launchOptions { -jobs 12  }
-  open_checkpoint design_qspi_wrapper_routed.dcp
-  set_property webtalk.parent_dir C:/Users/duhame01/Vivado_projects/spi_interface_new/spi_interface_new.cache/wt [current_project]
-set_property TOP design_qspi_wrapper [current_fileset]
+  set_param chipscope.maxJobs 16
+  set_param runs.launchOptions { -jobs 30  }
+  open_checkpoint test_platform_kairos_wrapper_routed.dcp
+  set_property webtalk.parent_dir /imec/users/duhame01/vivado_projects/test_platform_kairos/test_platform_kairos.cache/wt [current_project]
+set_property TOP test_platform_kairos_wrapper [current_fileset]
 OPTRACE "read constraints: write_bitstream" START { }
 OPTRACE "read constraints: write_bitstream" END { }
   set_property XPM_LIBRARIES {XPM_CDC XPM_FIFO XPM_MEMORY} [current_project]
-  catch { write_mem_info -force -no_partial_mmi design_qspi_wrapper.mmi }
+  catch { write_mem_info -force -no_partial_mmi test_platform_kairos_wrapper.mmi }
 OPTRACE "write_bitstream setup" END { }
 OPTRACE "write_bitstream" START { }
-  write_bitstream -force design_qspi_wrapper.bit 
+  write_bitstream -force test_platform_kairos_wrapper.bit 
 OPTRACE "write_bitstream" END { }
 OPTRACE "write_bitstream misc" START { }
 OPTRACE "read constraints: write_bitstream_post" START { }
 OPTRACE "read constraints: write_bitstream_post" END { }
-  catch {write_debug_probes -quiet -force design_qspi_wrapper}
-  catch {file copy -force design_qspi_wrapper.ltx debug_nets.ltx}
+  catch {write_debug_probes -quiet -force test_platform_kairos_wrapper}
+  catch {file copy -force test_platform_kairos_wrapper.ltx debug_nets.ltx}
   close_msg_db -file write_bitstream.pb
 } RESULT]
 if {$rc} {

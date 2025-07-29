@@ -2,12 +2,13 @@
 //  Test #4
 // --------------------------------------------------------------------
 // Desciption:
-//   Read write to various Arrays and Devices in varfious modes interlaved each other
+//   Read write to various Arrays and Devices in various modes interlaved each other
 
-//Enable clock to internal
+// Enable clock to internal
 // --------------------------------------------------------------------
-// Enable AMS
-ENABLE_AMS
+
+// DISABLE_AMS
+
 // idac_en, then vco_en, then clk_freqdiv_en, then clk_direct_en
 REGWR 404 FF 01
 REGWR 404 FF 03
@@ -37,86 +38,50 @@ REGWR 0 452301FF 0
 // PL_l1_WR = 0(10)0(20)0(10)
 // PL_RD    = 0(12)1( 9)0(19)
 // SAEN     = 0(19)1(19)0( 2)
-// First do 3 toggels of correct duration
-REGWR 20 FFFFFFFF 22222222
-REGRD 20
-// WL rd and wr
-REGWR 24 FFFFFFFF 00020002
-REGRD 24
-// BL (write) 0 and 1
-REGWR 28 FFFFFFFF 00020000
-REGRD 28
-// PL write 0 and 1
-REGWR 2C FFFFFFFF 00000002
-REGRD 2C
-// PL read  and saen
-REGWR 30 FFFFFFFF 00020002
-REGRD 30
-// WL wr toggels 0 to 2 (-1 val)
-REGWR 34 00FFFFFF 00091309
-REGRD 34
-// WL rd toggels 0 to 2 (-1 val)
-REGWR 44 00FFFFFF 00091309
-REGRD 44
-// BL (write) 0 toggels 0 to 2 (-1 val)
-REGWR 54 00FFFFFF 00091309
-REGRD 54
-// BL (write) 1 toggels 0 to 2 (-1 val)
-REGWR 64 00FFFFFF 0013080B
-REGRD 64
-// PL write 0 toggels 0 to 2 (-1 val)
-REGWR 74 00FFFFFF 0013080B
-REGRD 74
-// PL write 1 toggels 0 to 2 (-1 val)
-REGWR 84 00FFFFFF 00091309
-REGRD 84
-// PL read toggels 0 to 2 (-1 val)
-REGWR 94 00FFFFFF 0013080B
-REGRD 94
-// SAEN (read) toggels 0 to 2 (-1 val)
-REGWR A4 00FFFFFF 00011212
-REGRD A4
-// SAEN cfg_rd_array_len_m1_saen_15 to ___12 write a dummy value and read
-REGWR B0 FFFFFFFF 56789ABC
-REGRD B0
-REGCMP FFFFFFFF 56789ABC
 
-// Read again some other value
-REGRD 20
+//Rely on defaults here
 
-//Set up to do direct mem read/writes
+ENABLE_AMS
+
+// Write to device4 and read back
 // --------------------------------------------------------------------
-// **** Need to Disable the bist before memeory transactions
-REGWR 04 00000004 00000000
-REGRD 04
-
-//Change read through delay (jsut as a test)
-// --------------------------------------------------------------------
-//As a test change the cfg_busy_delay_m1 to 2 (delay of 3), anything less than this does not work with current pipeline delay 
-// WARNING : I change these values from 00000F000 to 0000F000
-REGWR 18 0000F000 00002000
-REGRD 18
-REGCMP 0000F000 00002000
-
-//Write to device4 and read back
-// --------------------------------------------------------------------
-// Selec device 3 counting from 0 (and not use mask) 
-REGWR 18 0000000FF 00000007
+// Select device 3 counting from 0 (and not use mask) 
+REGWR 18 0000001FF 00000007
 // Do a read/write cycle on MEM (address is not used)
-//Also note other than two lsb being 01, everything else should be ignored
+// Also note other than two lsb being 01, everything else should be ignored
 MEMWR FEF 43D1E46F 150D87BA 85A868EF 7E9532E8 0E1A588A B0ED72C8 BF934E58 045EDCBD
 MEMRD 0E3
 MEMCMP 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000001
 
-//Write to array locations and few devivces and read back ot of order
+// Write to device7 and read back but read in differantial mode
+// --------------------------------------------------------------------
+// Select device 6 counting from 0 (and not use mask) 
+REGWR 18 000001FF 0000000A
+// Set cfga_set4diff = 1'b1 
+REGWR 400 00000010 00000010
+// Do a read/write cycle on MEM (address is not used)
+MEMWR 111 0 0 0 0 0 0 0 1
+// Select device 21 counting from 0 (and not use mask) 
+REGWR 18 000001FF 00000019
+MEMRD F3A
+// Note this device is not written nece should be 0
+MEMCMP 0 0 0 0 0 0 0 0
+// Select device 6 counting from 0 again (and not use mask) 
+REGWR 18 000001FF 0000000A
+MEMRD 0
+// Now it should be the written value
+MEMCMP 0 0 0 0 0 0 0 00000001
+// Reset cfga_set4diff = 1'b0
+REGWR 400 00000010 00000000
+
+// Write to array locations and few devices and read back out of order
 // --------------------------------------------------------------------
 
 // 1. Do a driect write to Array 2
 // --------------------------------------------------------------------
 // Selec Array 2 (and not use mask) 
-// WARNING : Changed from 0000000FF to 000000FF
-REGWR 18 000000FF 00000002
-//Do a direct write to WL d13; Byte address d13<<5 = 1A0
+REGWR 18 000001FF 00000002
+// Do a direct write to WL d13; Byte address d13<<5 = 1A0
 MEMWR 1A0 EA51D0E5 784ECFFC FF1F4047 843D1637 4141CAAC 0225BE28 80AA65D1 3FA9C149
 
 // 2. Do a device write to Dev 0, 7 and 31
@@ -151,7 +116,7 @@ REGWR 110 FFFFFFFF FFFFFFFF
 REGWR 114 FFFFFFFF FFFFFFFF
 REGWR 118 FFFFFFFF FFFFFFFF
 REGWR 11C FFFFFFFF FFFFFFFF
-//Write the value to WL=d278
+// Write the value to WL=d278
 MEMWRM 23DA7126 FD93AF8A E6898B64 93A0BA3A 8BC5A0C7 C737D1C6 8FEE7AF6 DE5EC222
 //     23DA7126 FD93AF8A E6898B64 93A0BA3A 8BC5A0C7 C737D1C6 8FEE7AF6 0E5EC222  (read comapre value)
 // Reset the E0 WL mask (don't forget this!!)
@@ -161,7 +126,7 @@ REGWR E0 FFFFFFFF 00000000
 // --------------------------------------------------------------------
 // No mask + Select Dev 7
 REGWR 18 000001FF 0000000B
-//Differential write is wrong!!
+// Differential write is wrong!!
 MEMWR FE 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
 // No mask + Select Dev 31
 REGWR 18 000001FF 00000023
@@ -181,7 +146,7 @@ REGWR C0 FFFFFFFF 00002000
 REGRD C0
 REGCMP FFFFFFFF 00002000
 
-// Set BL masks (write every byte except bits 64-67, 254 and 252)
+// Set BL masks (write every byte except bits 64-67, 255 and 253)
 REGWR 100 FFFFFFFF FFFFFFFF
 REGWR 104 FFFFFFFF FFFFFFFF
 REGWR 108 FFFFFFFF FFFFFFF0
@@ -205,14 +170,14 @@ REGWR C0 FFFFFFFF 00000000
 // No mask + Select Dev 31
 REGWR 18 000001FF 00000023
 MEMRD BEEF
-//Overwritten value
+// Overwritten value
 MEMCMP 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
 
 // 7. Direct readback Array 3
 // --------------------------------------------------------------------
 // No mask + Select Array 3
 REGWR 18 000001FF 00000003
-//Address d278<<5 = h22C0
+// Address d278<<5 = h22C0
 MEMRD 22C0
 MEMCMP 23DA7126 FD93AF8A E6898B64 93A0BA3A 8BC5A0C7 C737D1C6 8FEE7AF6 CE5EC222
 
@@ -221,7 +186,7 @@ MEMCMP 23DA7126 FD93AF8A E6898B64 93A0BA3A 8BC5A0C7 C737D1C6 8FEE7AF6 CE5EC222
 // No mask + Select Dev 7
 REGWR 18 000001FF 0000000B
 MEMRD FEED
-//Note Dev7 is written wrongly differentially, hence comaprfe with earlier value
+// Note Dev7 is written wrongly differentially, hence comapre with earlier value
 MEMCMP 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000001
 
 // 9. Direct write Array 0  Address h100 (d256)
@@ -235,7 +200,7 @@ MEMWR 100 D5E6765C 8157FFC9 F3A780EF 91A9DA0B A0DF068F CBD857DF 43B50BB7 D6B59DA
 // No mask + Select Dev 0
 REGWR 18 000001FF 00000004
 MEMRD 0
-//Note writing is wrong hence compare with orginal value
+// Note writing is wrong hence compare with orginal value
 MEMCMP 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
 
 // 11. Direct read Array 0 Address h100 (d256)

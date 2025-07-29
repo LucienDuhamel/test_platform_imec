@@ -1,23 +1,25 @@
 // --------------------------------------------------------------------
-//  Test #3
+//  Test #4
 // --------------------------------------------------------------------
 // Desciption:
-//   Some clock swithing between various read/writes
+//   Read write to various Arrays and Devices in varfious modes interlaved each other
 
 //Enable clock to internal
 // --------------------------------------------------------------------
 // Enable AMS
-ENABLE_AMS
+// ENABLE_AMS
 // idac_en, then vco_en, then clk_freqdiv_en, then clk_direct_en
-REGWR 404 FF 01
-REGWR 404 FF 03
-REGWR 404 FF 0F
+// REGWR 404 FF 01
+// REGWR 404 FF 03
+// REGWR 404 FF 0F
 
 // Wait a bit
-WAIT_NS F
+// ########### TO CHANGE ###########
+// WAIT_NS F
+// #################################
 
 // Switch from ref clk to internal VCO clk
-REGWR 10 FF 03
+// REGWR 10 FF 03
 
 // Reset modules
 // --------------------------------------------------------------------
@@ -84,59 +86,24 @@ REGCMP FFFFFFFF 56789ABC
 // Read again some other value
 REGRD 20
 
-// Selec Array 0 (and not use mask) 
-REGWR 18 000001FF 00000000
-
+//Set up to do direct mem read/writes
+// --------------------------------------------------------------------
 // **** Need to Disable the bist before memeory transactions
-REGWR 04 00000004 00000000
+REGWR 04 00000002 00000000
 REGRD 04
 
-// Write through a mask
+//Change read through delay (jsut as a test)
 // --------------------------------------------------------------------
-// Use mask now (Array 0) but read/write address 3FE0 (==3FE0>>5 = 'd511)
-REGWR 18 00000100 00000100
-// Need to set mask of WL to 511 (in 0 to 511 bit mask), hence only need to program 480 to 511 mask reg with 511-480 = 31st active => 80000000
-// Set mask for WL 480 to 511 addreses
-REGWR FC FFFFFFFF 80000000
-REGRD FC
-REGCMP FFFFFFFF 80000000
+//As a test change the cfg_busy_delay_m1 to 0 (delay of 1), anything less than this does not work with current pipeline delay 
+//REGWR 18 00000F000 00003000
+REGWR 18 00000F000 00000000
+REGRD 18
+REGCMP 00000F000 00000000
 
-// Set BL masks (write every byte)
-REGWR 100 FFFFFFFF FFFFFFFF
-REGRD 100
-REGWR 104 FFFFFFFF FFFFFFFF
-REGRD 104
-REGWR 108 FFFFFFFF FFFFFFFF
-REGRD 108
-REGWR 10C FFFFFFFF FFFFFFFF
-REGRD 10C
-REGWR 110 FFFFFFFF FFFFFFFF
-REGRD 110
-REGWR 114 FFFFFFFF FFFFFFFF
-REGRD 114
-REGWR 118 FFFFFFFF FFFFFFFF
-REGRD 118
-REGWR 11C FFFFFFFF FFFFFFFF
-REGRD 11C
-// Read back through masking the direct written value
-MEMWRM 4AA048FE 8ECCB049 ED897645 2CFC3694 9D192726 6C6CF3B4 0FE305B3 2E1FCDED
-
-// Read directly back
+// Direct write/read Array 0  Address hFF (d255) i.e. WL 255>>5 = d'7
 // --------------------------------------------------------------------
-
-// First switch from internal VCO clk to ref clk (in order to chnage clock div of internal clock)
-REGWR 10 01 00
-// As a test change the clock division to half
-REGWR 14 FFFF 0001
-//Switch back to internal clock (now divided by 2)
-REGWR 10 01 01
-
-//read the value back
-MEMRD 3FE0
-
-// First switch from internal VCO clk to ref clk (in order to chnage clock div of internal clock)
-REGWR 10 01 00
-
-//Compare if the read value is same
-MEMCMP 4AA048FE 8ECCB049 ED897645 2CFC3694 9D192726 6C6CF3B4 0FE305B3 2E1FCDED
-
+// No mask + Select Array 0
+REGWR 18 000001FF 00000000
+MEMWR FF D5E6765C 8157FFC9 F3A780EF 91A9DA0B A0DF068F CBD857DF 43B50BB7 D6B59DA0
+MEMRD FF
+MEMCMP D5E6765C 8157FFC9 F3A780EF 91A9DA0B A0DF068F CBD857DF 43B50BB7 D6B59DA0

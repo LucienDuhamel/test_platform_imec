@@ -1,0 +1,32 @@
+// --------------------------------------------------------------------
+// Test Reg #1
+// --------------------------------------------------------------------
+ 
+//Enable clock to internal
+// --------------------------------------------------------------------
+// Enable AMS
+// ENABLE_AMS
+// idac_en, then vco_en, then clk_freqdiv_en, then clk_direct_en
+REGWR 404 FF 01
+REGWR 404 FF 03
+REGWR 404 FF 0F
+
+// Wait a bit
+// ########### TO CHANGE ###########
+// WAIT_NS F
+// #################################
+
+// Switch from ref clk to internal VCO clk
+// REGWR 10 FF 03
+
+// Reset modules
+REGWR 0 654321FF CBA9871F
+REGRD 0
+REGCMP 0000000F 0000000F
+// Deassert rests
+REGWR 0 0000000F 00000000
+ 
+ 
+REGWR 20 FFFFFFFF 12345678
+REGRD 20
+REGCMP FFFFFFFF 12345678

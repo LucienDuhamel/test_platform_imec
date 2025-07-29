@@ -1,0 +1,124 @@
+# COMMAND.YAML
+#############################################################
+# Order matters here : cmd first, then addr, then data !!!  #
+#############################################################
+
+# To add in a readme in /data folder
+# TO READ : this file is closely related to the way test files are written
+#           test file should always have the same formatting :
+#               - one line = one command
+#               - one line can be composed of command bytes, addr bytes and data bytes in this EXACT order 
+#               - comments in test files are introduced with // 
+#               - a token in the python code corresponds to a packet of data :
+#                   ex : REGWR 0 654321FF CBA9871F
+#                   this line is composed of 4 tokens : [command1, addr1, mask1, data1]
+#           The number associated to token fields in this file is the related number in test file.
+#           If a wrong number is provided, tests won't work !!!
+#           Also all commands should have the same number of token, that is why it is not in the tokens field.
+#           (otherwise you would have to change every field)
+
+REGRD : 
+  description : |
+    Command to read in a register.
+    Active only if active field is set to 1.
+    You have to specify in the test file in the SAME line in this EXACT order, the number of token for: 
+    - the command (by default : 1)
+    - the address (by default : 1)
+  pattern : "REGRD"
+  active : 1
+  tokens : 
+    cmd : 1
+    addr : 1
+
+REGWR :
+  description :  |
+    Command to write in a register.
+    Active only if active field is set to 1.
+    You have to specify in the test file in the SAME line in this EXACT order, the number of token for:  
+    - the command (by default : 1)
+    - the address (by default : 1)
+    - the written data (by default : 2)
+    WARNING : For this command, the first token of data is a mask.
+              You have to create a new command this is not the behavior wanted.
+  pattern : "REGWR"
+  active : 1
+  tokens :
+    cmd :  1
+    addr : 1
+    data : 2
+
+MEMRD : 
+  description : |
+    Command to read in the memory.
+    Active only if active field is set to 1.
+    You have to specify in the test file in the SAME line in this EXACT order, the number of token for: 
+    - the command (by default : 1)
+    - the address (by default : 1)
+  pattern : "MEMRD"
+  active : 1
+  tokens : 
+    cmd :  1
+    addr : 1
+
+MEMWR :
+  description :  |
+    Command to write in the memory.
+    Active only if active field is set to 1.
+    You have to specify in the test file in the SAME line in this EXACT order, the number of token for: 
+    - the command (by default : 1)
+    - the address (by default : 1)
+    - the written data (by default : 8)
+  pattern : "MEMWR"
+  active : 1
+  tokens :
+    cmd :  1
+    addr : 1
+    data : 8
+
+MEMRDM : 
+  description : |
+    Command to read memory where the address and data mask is given by register interface.
+    Active only if active field is set to 1.
+    You have to specify in the test file in the SAME line in this EXACT order, the number of token for:  
+    - the command (by default : 1)
+  pattern : "MEMRDM"
+  active : 1
+  tokens : 
+    cmd :  1
+
+MEMWRM :
+  description : |
+    Command to write in the memory where the address and data mask is given by register interface.
+    Active only if active field is set to 1.
+    You have to specify in the test file in the SAME line in this EXACT order, the number of token for: 
+    - the command (by default : 1)
+    - the written data (by default : 8)
+  pattern : "MEMWRM"
+  active : 1
+  tokens : 
+    cmd :  1 
+    data : 8
+  
+REGCMP : 
+  description : |
+    Command to compare the last value read in a register with the one given by data tokens.
+    Active only if active field is set to 1.
+    Here, as there is a mask in one of the two token, only the last token is compared with respect to the mask.
+    You have to specify in the test file in the SAME line in this EXACT order, the number of token for: 
+  pattern : "REGCMP"
+  active : 1
+  tokens : 
+    cmd : 1
+    data : 2
+    
+MEMCMP :
+  description : |
+    Command to compare the last value read in the memory with the one given by data tokens.
+    Active only if active field is set to 1.
+    You have to specify in the test file in the SAME line in this EXACT order, the number of token for: 
+  pattern : "MEMCMP"
+  active : 1
+  tokens : 
+    cmd : 1 
+    data : 8
+      

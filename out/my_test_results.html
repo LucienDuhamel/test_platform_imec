@@ -1,0 +1,134 @@
+<!DOCTYPE html> 
+ <html>
+<head> 
+     <title>Output Data in an HTML file</title> 
+     <style>  h1 {
+  color: #ffcc00; /* Gold text for contrast */
+  font-size: 2.0em;
+  text-align: left;
+  padding: 20px;
+  margin: 30px 0;
+  border-bottom: 2px solid #ffcc00;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+div.main {
+  width: 60vw; /* 50% of the viewport width */
+  height: 100vh; /* Full height of the screen */
+  background-color: #000000; /* Black background */
+  margin: 0 auto; /* Center horizontally */
+  padding: 20px;
+  box-sizing: border-box;
+  color: #e6e6e6; /* Light text for contrast */
+  overflow-y: auto; /* Scroll if content overflows */
+}
+
+div.compare {
+    width: 52vw;
+    border: medium solid rgb(255, 255, 255);
+    background-color: rgba(0, 0, 100, 0.3);
+    padding: 20px;
+    margin-top: 10px;
+    border-radius: 6px;
+}
+
+h2.compare {
+    color: rgb(230, 230, 230);
+}
+ </style> 
+     </head> 
+ <body> 
+     <div class = "main"> 
+ <h1> Results from my_test </h1> 
+<p style="color:rgb(230, 230, 230);">REGWR 	 REGWR 404 FF 01   
+ </p>
+<p style="color:rgb(230, 230, 230);">REGWR (11) : B0 04 04 FF 00 00 00 01 00 00 00  
+ </p>
+<p style="color:rgb(230, 230, 230);">Command # 1: Finished Writing  
+</p>
+<p style="color:rgb(230, 230, 230);">REGWR 	 REGWR 404 FF 03   
+ </p>
+<p style="color:rgb(230, 230, 230);">REGWR (11) : B0 04 04 FF 00 00 00 03 00 00 00  
+ </p>
+<p style="color:rgb(230, 230, 230);">Command # 2: Finished Writing  
+</p>
+<p style="color:rgb(230, 230, 230);">REGWR 	 REGWR 404 FF 0F   
+ </p>
+<p style="color:rgb(230, 230, 230);">REGWR (11) : B0 04 04 FF 00 00 00 0F 00 00 00  
+ </p>
+<p style="color:rgb(230, 230, 230);">Command # 3: Finished Writing  
+</p>
+<p style="color:rgb(230, 230, 230);">REGWR 	 REGWR 0 654321FF CBA9871F   
+ </p>
+<p style="color:rgb(230, 230, 230);">REGWR (11) : B0 00 00 FF 21 43 65 1F 87 A9 CB  
+ </p>
+<p style="color:rgb(230, 230, 230);">Command # 4: Finished Writing  
+</p>
+<p style="color:rgb(230, 230, 230);">REGRD 	 REGRD 0   
+ </p>
+<p style="color:rgb(230, 230, 230);">REGRD (3) : A0 00 00  
+ </p>
+<p style="color:rgb(230, 230, 230);">Command # 5: Finished Reading; read value = 0000000F  
+</p>
+<p style="color:rgb(230, 230, 230);">REGCMP 	 REGCMP 0000000F 0000000F   
+ </p>
+ <div class= "compare"> 
+  <h2 class= "compare"> Comparison of read data and reference data : </h2> 
+ <p style="color:rgb(230, 230, 230);"> 
+    **** Command #%4d: Last Reg read value (masked) = 0F
+    is equal to compared value =                      0F **** 
+    </p>
+<p style="color:rgb(230, 230, 230);"> 
+    The compared data are the same : test <span style="color:rgb(255, 255, 255); background-color: rgb(0, 179, 0);"> SUCCESSFUL : </span> <br> 
+        the ref data is : 0000000F <br>
+        the tested data is : 0000000F 
+        </p>
+</div> 
+<p style="color:rgb(230, 230, 230);">REGWR 	 REGWR 0 0000000F 00000000   
+ </p>
+<p style="color:rgb(230, 230, 230);">REGWR (11) : B0 00 00 0F 00 00 00 00 00 00 00  
+ </p>
+<p style="color:rgb(230, 230, 230);">Command # 7: Finished Writing  
+</p>
+<p style="color:rgb(230, 230, 230);">REGWR 	 REGWR 20 FFFFFFFF 12345678   
+ </p>
+<p style="color:rgb(230, 230, 230);">REGWR (11) : B0 20 00 FF FF FF FF 78 56 34 12  
+ </p>
+<p style="color:rgb(230, 230, 230);">Command # 8: Finished Writing  
+</p>
+<p style="color:rgb(230, 230, 230);">REGRD 	 REGRD 20   
+ </p>
+<p style="color:rgb(230, 230, 230);">REGRD (3) : A0 20 00  
+ </p>
+<p style="color:rgb(230, 230, 230);">Command # 9: Finished Reading; read value = 12345678  
+</p>
+<p style="color:rgb(230, 230, 230);">REGCMP 	 REGCMP FFFFFFFF 12345678   
+ </p>
+ <div class= "compare"> 
+  <h2 class= "compare"> Comparison of read data and reference data : </h2> 
+ <p style="color:rgb(230, 230, 230);"> 
+    **** Command #%4d: Last Reg read value (masked) = 12
+    is equal to compared value =                      12 **** 
+    </p>
+<p style="color:rgb(230, 230, 230);"> 
+    **** Command #%4d: Last Reg read value (masked) = 34
+    is equal to compared value =                      34 **** 
+    </p>
+<p style="color:rgb(230, 230, 230);"> 
+    **** Command #%4d: Last Reg read value (masked) = 56
+    is equal to compared value =                      56 **** 
+    </p>
+<p style="color:rgb(230, 230, 230);"> 
+    **** Command #%4d: Last Reg read value (masked) = 78
+    is equal to compared value =                      78 **** 
+    </p>
+<p style="color:rgb(230, 230, 230);"> 
+    The compared data are the same : test <span style="color:rgb(255, 255, 255); background-color: rgb(0, 179, 0);"> SUCCESSFUL : </span> <br> 
+        the ref data is : 12345678 <br>
+        the tested data is : 12345678 
+        </p>
+</div> 
+</div> 
+ </body> 
+ </html>
