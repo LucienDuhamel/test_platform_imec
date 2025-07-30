@@ -24,7 +24,7 @@ REGRD :
     You have to specify in the test file in the SAME line in this EXACT order, the number of token for: 
     - the command (by default : 1)
     - the address (by default : 1)
-  pattern : "REGRD"
+  name : "REGRD"
   active : 1
   tokens : 
     cmd : 1
@@ -40,7 +40,7 @@ REGWR :
     - the written data (by default : 2)
     WARNING : For this command, the first token of data is a mask.
               You have to create a new command this is not the behavior wanted.
-  pattern : "REGWR"
+  name : "REGWR"
   active : 1
   tokens :
     cmd :  1
@@ -54,7 +54,7 @@ MEMRD :
     You have to specify in the test file in the SAME line in this EXACT order, the number of token for: 
     - the command (by default : 1)
     - the address (by default : 1)
-  pattern : "MEMRD"
+  name : "MEMRD"
   active : 1
   tokens : 
     cmd :  1
@@ -68,7 +68,7 @@ MEMWR :
     - the command (by default : 1)
     - the address (by default : 1)
     - the written data (by default : 8)
-  pattern : "MEMWR"
+  name : "MEMWR"
   active : 1
   tokens :
     cmd :  1
@@ -81,7 +81,7 @@ MEMRDM :
     Active only if active field is set to 1.
     You have to specify in the test file in the SAME line in this EXACT order, the number of token for:  
     - the command (by default : 1)
-  pattern : "MEMRDM"
+  name : "MEMRDM"
   active : 1
   tokens : 
     cmd :  1
@@ -93,7 +93,7 @@ MEMWRM :
     You have to specify in the test file in the SAME line in this EXACT order, the number of token for: 
     - the command (by default : 1)
     - the written data (by default : 8)
-  pattern : "MEMWRM"
+  name : "MEMWRM"
   active : 1
   tokens : 
     cmd :  1 
@@ -105,7 +105,7 @@ REGCMP :
     Active only if active field is set to 1.
     Here, as there is a mask in one of the two token, only the last token is compared with respect to the mask.
     You have to specify in the test file in the SAME line in this EXACT order, the number of token for: 
-  pattern : "REGCMP"
+  name : "REGCMP"
   active : 1
   tokens : 
     cmd : 1
@@ -116,7 +116,7 @@ MEMCMP :
     Command to compare the last value read in the memory with the one given by data tokens.
     Active only if active field is set to 1.
     You have to specify in the test file in the SAME line in this EXACT order, the number of token for: 
-  pattern : "MEMCMP"
+  name : "MEMCMP"
   active : 1
   tokens : 
     cmd : 1 

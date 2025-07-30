@@ -1,0 +1,104 @@
+// --------------------------------------------------------------------
+//  Test #BIST
+// --------------------------------------------------------------------
+
+//Switch the clock to internal
+// --------------------------------------------------------------------
+
+// DISABLE_AMS
+
+// Reset modules
+REGWR 0 654321FF CBA9871F
+REGRD 0
+// Deassert rests
+REGWR 0 452301FF 0
+
+// Enabled by default
+// // idac_en, then vco_en, then clk_freqdiv_en, then clk_direct_en
+// REGWR 404 FF 01
+// REGWR 404 FF 03
+// REGWR 404 FF 0F
+
+// Wait a bit
+WAIT_NS F
+
+// Switch from ref clk to internal VCO clk
+REGWR 10 FF 03
+
+// Array conf
+// --------------------------------------------------------------------
+// Write toggle numbers (as defined in kairos_dummy_array
+// WL_WR    = 0(10)1(20)0(10)
+// WL_RD    = 0(10)1(20)0(10)
+// BL_l0_WR = 0(10)0(20)0(10)
+// BL_l1_WR = 0(12)1( 9)0(19)
+// PL_l0_WR = 0(12)1( 9)0(19)
+// PL_l1_WR = 0(10)0(20)0(10)
+// PL_RD    = 0(12)1( 9)0(19)
+// SAEN     = 0(19)1(19)0( 2)
+// First do 3 toggels of correct duration
+
+//Don't do as use default
+
+// // As a test change the cfg_busy_delay_m1 to 2 (delay of 3), anything less than this does not work with current pipeline delay 
+// REGRD 18
+// REGWR 18 00000F000 00002000
+// REGRD 18
+// REGCMP 00000F000 00002000
+
+/////////////////////////
+// BIST CONF/START/STOP/STEP
+/////////////////////////
+
+// with 200 ADDR per block (i.e. count of failures in each block of that many addrs)
+REGWR 200 00003FFF 200
+
+// BIST dec count
+REGWR 200 4000000 0000000
+
+// BIST ADDR START (Included if decremental)
+REGWR 204 00003FFF 0
+
+// BIST ADDR STOP (Included if decremental)
+// Whole coverage:
+REGWR 208 00003FFF 3FE0
+
+// BIST ADDR STEP (32 in hex)
+REGWR 20C 000003FF 20
+
+// Selec Array 0 (and not use mask) 
+REGWR 18 0000001FF 00000000
+// **** Need to Disable the bist before memeory transactions
+REGWR 04 00000002 00000000
+REGRD 04
+
+//As a test change the cfg_busy_delay_m1 to 2 (delay of 3), anything less than this does not work with current pipeline delay 
+REGRD 18
+REGWR 18 00000F000 00002000
+REGRD 18
+REGCMP 00000F000 00002000
+
+// Enable AMS
+ENABLE_AMS
+
+/////////////////////////
+// BIST
+/////////////////////////
+// Enable bist in system
+REGWR 4 0000000F F
+
+// Disable bist reset request
+REGWR 0 00000002 00000000
+// Enable bist ce
+//REGWR 4 00000002 00000001
+REGWR 200 40000000 40000000
+
+// Wait till tests start
+WTSV busy_o 1
+// Wait till tests end
+WTSV busy_o 0
+
+// if no FAKE errors, there should be no errors
+REGWR 348 FFFFFFFF 0
+REGRD 348
+REGCMP FFFFFFFF 0

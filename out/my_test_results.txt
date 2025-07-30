@@ -14,15 +14,15 @@ REGWR 	 REGWR 0 654321FF CBA9871F
  Command # 4: Finished Writing  
 REGRD 	 REGRD 0   
  REGRD (3) : A0 00 00  
- Command # 5: Finished Reading; read value = 0000000F  
+ Command # 5: Finished Reading; read value = 0000000F   
 REGCMP 	 REGCMP 0000000F 0000000F   
   
  Comparison of read data and reference data 
  **** Command #%4d: Last Reg read value (masked) = 0F
     is equal to compared value =      0F **** 
   The compared data are the same : test SUCCESSFUL :
-        the ref data is : 0000000F 
-        the read byte is : 0000000F 
+        the ref data is : 0000000F  
+        the read byte is : 0000000F  
  
 REGWR 	 REGWR 0 0000000F 00000000   
  REGWR (11) : B0 00 00 0F 00 00 00 00 00 00 00  
@@ -32,7 +32,7 @@ REGWR 	 REGWR 20 FFFFFFFF 12345678
  Command # 8: Finished Writing  
 REGRD 	 REGRD 20   
  REGRD (3) : A0 20 00  
- Command # 9: Finished Reading; read value = 12345678  
+ Command # 9: Finished Reading; read value = 12345678   
 REGCMP 	 REGCMP FFFFFFFF 12345678   
   
  Comparison of read data and reference data 
@@ -45,7 +45,7 @@ REGCMP 	 REGCMP FFFFFFFF 12345678
   **** Command #%4d: Last Reg read value (masked) = 78
     is equal to compared value =      78 **** 
   The compared data are the same : test SUCCESSFUL :
-        the ref data is : 12345678 
-        the read byte is : 12345678 
+        the ref data is : 12345678  
+        the read byte is : 12345678  
  
 End of results for this file

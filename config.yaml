@@ -13,7 +13,6 @@ LAUNCH_CONFIG : # single test and all test config cannot be used both at the sam
   activate_exceptions : 0 #choose 1 to activate exceptions when an error occurs and 0 to desactivate it
   
 TEST_FILE :
-  nb_of_token_for_cmd : 1
   nb_bytes_per_token_cmd :  1
   nb_bytes_per_token_addr : 2
   nb_bytes_per_token_data : 4
