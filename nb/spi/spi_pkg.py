@@ -25,14 +25,3 @@ XSP_CR_RXFIFO_RESET_MASK   = 0x00000040
 XSP_CR_MANUAL_SS_MASK      = 0x00000080
 
 SLAVE_NO_SELECTION = 0xFFFFFFFF
-
-
-spi_commands: dict[str, int] = {
-    "SPI_NOCOMMAND": 0x00,
-    "SPI_REGRD":     0xA0,
-    "SPI_REGWR":     0xB0,
-    "SPI_MEMRD":     0xC0,
-    "SPI_MEMWR":     0xC8,
-    "SPI_MEMRDM":    0xD0,
-    "SPI_MEMWRM":    0xD8,
-}

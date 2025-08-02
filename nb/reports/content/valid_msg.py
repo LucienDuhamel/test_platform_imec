@@ -1,3 +1,17 @@
+from ....package import (
+    activate_msg_prints, 
+    activate_result_file_html, 
+    activate_result_file_txt
+)
+
+from ..builder_html import (
+    end_cmp_div,
+    valid_msg_html,
+    write_html_msg
+)
+
+from ..builder_txt import valid_msg
+
 def reg_cmp_match(result_file_html, result_file_txt, ref_data : str, rd_data : str) -> None :
     """
     Logs a successful register comparison.
@@ -85,7 +99,7 @@ def valid_wr_msg(result_file_html, result_file_txt, indice_command_from_test_fil
         write_html_msg(result_file_html, message)
     
 
-def valid_cmp(result_file_html, result_file_txt, ref_data : list, rd_data : list) -> None:
+def valid_cmp_msg(result_file_html, result_file_txt, ref_data : list, rd_data : list) -> None:
     """
     Logs a successful data comparison.
 
@@ -103,7 +117,7 @@ def valid_cmp(result_file_html, result_file_txt, ref_data : list, rd_data : list
     for data in rd_data :
         spaced_rd_data += data + ''
         
-    message = f""" {normal_colour} The compared data are the same : {valid_msg}
+    message = f"""The compared data are the same : {valid_msg()}
         the ref data is : {spaced_ref_data} 
         the read byte is : {spaced_rd_data} \n \n"""
     
@@ -113,7 +127,7 @@ def valid_cmp(result_file_html, result_file_txt, ref_data : list, rd_data : list
         
     # Inside a <p>, use <br> to go to a new line 
     message_html = f""" 
-    The compared data are the same : test {valid_msg_html} <br> 
+    The compared data are the same : test {valid_msg_html()} <br> 
         the ref data is : {spaced_ref_data} <br>
         the tested data is : {spaced_rd_data} 
         """
@@ -123,4 +137,4 @@ def valid_cmp(result_file_html, result_file_txt, ref_data : list, rd_data : list
         result_file_txt.write(message_txt)
     if (activate_result_file_html):
         write_html_msg(result_file_html, message_html)
-        result_file_html.write(end_cmp_div) # end the compare div
+        result_file_html.write(end_cmp_div()) # end the compare div

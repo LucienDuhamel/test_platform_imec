@@ -17,6 +17,10 @@
 #           Also all commands should have the same number of token, that is why it is not in the tokens field.
 #           (otherwise you would have to change every field)
 
+nb_bytes_per_token_cmd :  1
+nb_bytes_per_token_addr : 2
+nb_bytes_per_token_data : 4
+
 REGRD : 
   description : |
     Command to read in a register.
@@ -25,6 +29,7 @@ REGRD :
     - the command (by default : 1)
     - the address (by default : 1)
   name : "REGRD"
+  spi_pattern : 0xA0
   active : 1
   tokens :
     cmd : 1
@@ -41,7 +46,7 @@ REGWR :
     WARNING : For this command, the first token of data is a mask.
               You have to create a new command this is not the behavior wanted.
   name : "REGWR"
-  spi_pattern : 0x
+  spi_pattern : 0xB0
   active : 1
   tokens :
     cmd :  1
@@ -56,6 +61,7 @@ MEMRD :
     - the command (by default : 1)
     - the address (by default : 1)
   name : "MEMRD"
+  spi_pattern : 0xC0
   active : 1
   tokens : 
     cmd :  1
@@ -70,6 +76,7 @@ MEMWR :
     - the address (by default : 1)
     - the written data (by default : 8)
   name : "MEMWR"
+  spi_pattern : 0xC8
   active : 1
   tokens :
     cmd :  1
@@ -83,6 +90,7 @@ MEMRDM :
     You have to specify in the test file in the SAME line in this EXACT order, the number of token for:  
     - the command (by default : 1)
   name : "MEMRDM"
+  spi_pattern : 0xD0
   active : 1
   tokens : 
     cmd :  1
@@ -95,6 +103,7 @@ MEMWRM :
     - the command (by default : 1)
     - the written data (by default : 8)
   name : "MEMWRM"
+  spi_pattern : 0xD8
   active : 1
   tokens : 
     cmd :  1 

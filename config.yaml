@@ -12,10 +12,6 @@ LAUNCH_CONFIG : # single test and all test config cannot be used both at the sam
   max_while_iterations : 1000
   activate_exceptions : 0 #choose 1 to activate exceptions when an error occurs and 0 to desactivate it
   
-TEST_FILE :
-  nb_bytes_per_token_cmd :  1
-  nb_bytes_per_token_addr : 2
-  nb_bytes_per_token_data : 4
   
   
 RESULT_FILE : # print_msg, txt_config and html_onfig can all be used at the same time 
@@ -26,16 +22,9 @@ RESULT_FILE : # print_msg, txt_config and html_onfig can all be used at the same
     activate : 1
   html_config :
     activate : 1
-    title_color : "rgb(0, 153, 255)"
-    text_colors :
-      default_color : "rgb(230, 230, 230)"
-      error_color : "rgb(255, 255, 255)"
-      validation_color : "rgb(255, 255, 255)"
-    highlight_colors :
-      error_color : "rgb(255, 0, 0)"
-      validation_color : "rgb(0, 179, 0)"
     
 STYLE_RESULT_FILE : "style.css"
+
 
 
 HARDWARE:

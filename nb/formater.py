@@ -47,7 +47,7 @@ def from_hex_to_int(hex_value : str) -> int :
     """
     return int(hex_value, 16)
 
-def from_list_hex_to_int(hex_list : list) -> int :
+def from_list_hex_to_int(hex_list : list) -> list :
     """
     Converts a list of hexadecimal strings to a list of integers.
 
@@ -88,7 +88,7 @@ def from_int_to_hex(int_val : int) -> str :
     return hex_val.upper()
 
 
-def from_list_int_to_hex(int_list : list) -> str :
+def from_list_int_to_hex(int_list : list) -> list :
     """
     Converts a list of integers to a list of two-character uppercase hexadecimal strings.
 
@@ -176,7 +176,7 @@ def parse_packet (data : str, mode : str) -> list :
         [31, 42]
     """
     
-    bytes_list = []
+    bytes_list : list[str|int]= []
     if (len(data)%2 == 1):
         data = '0' + data  
     for i in range(0, len(data), 2) :
@@ -207,7 +207,7 @@ def parse_list_of_packets(list_of_packets : list, mode : str) -> list:
         [31, 255, 22, 50, 86, 120, 154, 188]
     """
     
-    parsed_list = []
+    parsed_list: list=[]
     for packet in list_of_packets :
         parsed_list = parsed_list + parse_packet(packet,mode)
     return parsed_list
@@ -290,3 +290,39 @@ doctest.testmod()
 # L = format_cmp_data(data, "int")
 # print(L)
 # print(type(L[0]))
+
+
+def format_parsed_line(parsed_line : list) -> str:
+    """
+    Formats a parsed command line into a string.
+
+    Args:
+        parsed_line (list): Parsed command line.
+
+    Returns:
+        str: Formatted command line string.
+    """
+    
+    command = parsed_line[0]
+    line = [command]
+    for token_field in parsed_line[1::] :
+        if (token_field):
+            line.append(token_field)
+    return from_list_to_str(line)
+
+
+def format_sent_line(sent_line : list) -> tuple[int, str]:
+    """
+    Formats a sent command line into a string.
+
+    Args:
+        sent_line (list): Sent command line.
+
+    Returns:
+        str: Formatted command line string.
+    """
+    
+    transmitted_line_hex = from_list_int_to_hex(sent_line)
+    number_of_bytes = len(transmitted_line_hex) 
+    transmitted_line_joined = from_list_to_str(transmitted_line_hex)
+    return number_of_bytes, transmitted_line_joined
