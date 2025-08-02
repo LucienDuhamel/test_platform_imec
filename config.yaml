@@ -4,7 +4,7 @@
 LAUNCH_CONFIG : # single test and all test config cannot be used both at the same time
   single_test : 
     activate : 1
-    test_file : "test_mem1" 
+    test_file : "my_test" 
   all_tests :  # Without IGNORED_TEST_FILES
     activate : 0
     ignored_test_files : 

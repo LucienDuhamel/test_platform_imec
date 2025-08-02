@@ -26,7 +26,7 @@ REGRD :
     - the address (by default : 1)
   name : "REGRD"
   active : 1
-  tokens : 
+  tokens :
     cmd : 1
     addr : 1
 
@@ -41,6 +41,7 @@ REGWR :
     WARNING : For this command, the first token of data is a mask.
               You have to create a new command this is not the behavior wanted.
   name : "REGWR"
+  spi_pattern : 0x
   active : 1
   tokens :
     cmd :  1
