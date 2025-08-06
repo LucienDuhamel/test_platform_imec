@@ -1,119 +1,280 @@
-# Function which launch a test and writes in an html result file 
-def init_html_result_file(test_file_name, test_file_path, css_file):
+import package as pkg
+
+from ..builder_html import (
+    end_cmp_div,
+    error_msg_html,
+    write_html_msg
+)
+
+from ..builder_print import error_msg
+
+
+def wrong_wr_parameters(result_file_html, result_file_txt) -> str:
     """
-    Initializes and opens an HTML result file for writing test results.
-
-    Args:
-        test_file_name (str): Name of the test file.
-        test_file_path (str): Path to the test file.
-        css_file (str): CSS style content to include in the HTML.
-
-    Returns:
-        file object: Opened HTML file handle.
-    """
-    
-    result_file_path_html = "out/" + test_file_name + '_results.html'
-    result_file_html = open(result_file_path_html,"w")
-    result_file_html_title = "Output Data in an HTML file"
-    header_content = f'Results from {test_file_name}'
-    html_content = initiate_html_content(result_file_html_title, css_file, header_content)
-    result_file_html.write(html_content)
-    return result_file_html
-
-def end_html_result_file() -> None:
-    """
-    Writes the HTML footer and closes the HTML result file.
-    """
-    
-    result_file_html.write(end_html())
-    result_file_html.close()
-
-
-def init_txt_result_file(test_file_name, test_file_path):
-    """
-    Initializes and opens a TXT result file for writing test results.
-
-    Args:
-        test_file_name (str): Name of the test file.
-        test_file_path (str): Path to the test file.
-
-    Returns:
-        file object: Opened TXT file handle.
-    """
-    
-    result_file_path_txt = "out/" + test_file_name + '_results.txt'
-    result_file_txt = open(result_file_path_txt,"w")
-    result_file_txt_title = f"Results from {test_file_name} \n \n"
-    result_file_txt.write(result_file_txt_title)
-    return result_file_txt
-
-def end_txt_result_file() -> None:
-    """
-    Writes the TXT footer and closes the TXT result file.
-    """
-    
-    end_txt_file = "End of results for this file"
-    result_file_txt.write(end_txt_file)
-    result_file_txt.close()
-
-
-def initiate_html_content(title : str, style_css : str, main_header_content : str) -> str :
-    """
-    Generates the initial HTML content for the result file, including headers and styles.
-
-    Args:
-        title (str): Title of the HTML document.
-        style_css (str): CSS styles to include.
-        main_header_content (str): Main header text for the HTML body.
-
-    Returns:
-        str: HTML content as a string.
-    """
-    
-    content = f"<!DOCTYPE html> \n "
-    content += f"<html>\n<head> \n \
-    <title>{title}</title> \n \
-    <style>  {style_css} </style> \n \
-    </head> \n <body> \n \
-    <div class = \"main\"> \n "
-
-    content += f"<h1> {main_header_content} </h1> \n"
-    return content 
-
-def write_html_msg(result_file_html, content : str) -> None :
-    """
-    Writes a message inside a <p> tag to the HTML result file.
+    Logs and returns a message for a mismatch in write command parameters.
 
     Args:
         result_file_html: File handle for HTML result output.
-        content (str): Message content to write.
-    """
-    
-    if (content == "" or content is None) :
-        content = "No content given : "
-        html_msg = start_p_html + content + end_p + "\n"
-    else :
-        html_msg = start_p_html + content + end_p + "\n"
-    result_file_html.write(html_msg) 
-    
-def start_cmp_div() -> str :
-    """
-    Returns the opening HTML for a comparison section.
+        result_file_txt: File handle for TXT result output.
 
     Returns:
-        str: HTML string for starting a comparison div.
+        str: Error message.
     """
     
-    content = f" <div class= \"compare\"> \n "
-    content += f" <h2 class= \"compare\"> Comparison of read data and reference data : </h2> \n "
-    return content 
+    message = "commands.yaml : mismatch between the given number of tokens for write command and the actual one in test file"
+    wrong_config_parameters(result_file_html, result_file_txt, message)
+    return message 
 
-def end_html() -> str :
+def test_config_error() -> None :
     """
-    Returns the closing HTML tags for the result file.
+    Raises an exception for an invalid test configuration (e.g., conflicting test flags).
+    """
+    message = f""" {error_msg()} Concurrency in the launch config : see the yaml file :  
+                    single test and all_tests booleans should not have the same value ! \n"""
+    raise Exception(message)
+    
+def number_of_packets_mismatch(result_file_html, result_file_txt, nb_test_bytes : int, nb_rd_bytes : int) -> None :
+    """
+    Logs and optionally raises an error when the number of read bytes does not match the expected number.
 
-    Returns:
-        str: HTML string for ending the document.
+    Args:
+        result_file_html: File handle for HTML result output.
+        result_file_txt: File handle for TXT result output.
+        nb_test_bytes (int): Expected number of bytes.
+        nb_rd_bytes (int): Actual number of bytes read.
     """
     
-    return "</div> \n </body> \n </html>"
+    message = f" {error_msg()} Both number of hex packets does not match : got {nb_rd_bytes}; should be {nb_test_bytes} \n"
+    if (pkg.activate_msg_prints):
+        print(message)
+    if (pkg.activate_result_file_txt):
+        message_txt = f"ERROR : Both number of hex packets does not match : got {nb_rd_bytes}; should be {nb_test_bytes} \n"
+        result_file_txt.write(message_txt)
+    if (pkg.activate_result_file_html):
+        message_html = f" {error_msg_html()} Both number of hex packets does not match : got {nb_rd_bytes}; should be {nb_test_bytes} \n"
+        write_html_msg(result_file_html, message_html)
+    if (activate_exceptions) :
+        raise Exception(message)
+        
+
+def no_rd_data(result_file_html, result_file_txt) -> None :
+    """
+    Logs and optionally raises an error when no data has been read yet.
+
+    Args:
+        result_file_html: File handle for HTML result output.
+        result_file_txt: File handle for TXT result output.
+    """
+    
+    message = f"{error_msg()} No data has been read yet. \n"
+    if (pkg.activate_msg_prints):
+        print(message)
+    if (pkg.activate_result_file_txt):
+        result_file_txt.write(message)
+    if (pkg.activate_result_file_html):
+        message_html = f"{error_msg_html()} No data has been read yet. \n"
+        write_html_msg(result_file_html, message_html)
+    if (pkg.activate_exceptions) :
+        raise Exception(message)
+
+def unknown_cmd(result_file_html, result_file_txt, command : str) -> None :
+    """
+    Logs and optionally raises an error for an unknown command.
+
+    Args:
+        result_file_html: File handle for HTML result output.
+        result_file_txt: File handle for TXT result output.
+        command (str): The unknown command string.
+    """
+    
+    message = f" {error_msg()} Unknown command: {command}"
+    if (pkg.activate_msg_prints):
+        print(message)
+    if (pkg.activate_result_file_txt):
+        message_txt = f"ERROR : Unknown command: {command}"
+        result_file_txt.write(message_txt)
+    if (pkg.activate_result_file_html):
+        message_html = f" {error_msg_html()} Unknown command: {command} \n"
+        write_html_msg(result_file_html, message_html)
+    if (pkg.activate_exceptions) :
+        raise Exception(message)
+
+def error_parsing_line(result_file_html, result_file_txt, line : str):
+    """
+    Logs and optionally raises an error when a line cannot be parsed.
+
+    Args:
+        result_file_html: File handle for HTML result output.
+        result_file_txt: File handle for TXT result output.
+        line (str): The problematic line.
+    """
+    
+    message = f"{error_msg()} unable to parse line: {line}"
+    if (pkg.activate_msg_prints):
+        print(message)
+    if (pkg.activate_result_file_txt):
+        message_txt = f"ERROR : unable to parse line: {line}"
+        result_file_txt.write(message_txt)
+    if (pkg.activate_result_file_html):
+        message_html = f"{error_msg_html()} unable to parse line: {line} \n"
+        write_html_msg(result_file_html, message_html)
+    if (pkg.activate_exceptions) :
+        raise Exception(message)
+        
+
+def wrong_config_parameters(result_file_html, result_file_txt, source):
+    """
+    Logs an error for wrong configuration parameters.
+
+    Args:
+        result_file_html: File handle for HTML result output.
+        result_file_txt: File handle for TXT result output.
+        source: Source or description of the configuration error.
+    """
+    message = f" {error_msg()} \t Wrong config parameters : see {source} . \n"
+    message_txt = f" Error : Wrong config parameters : see {source} . \n"
+    message_html = f" {error_msg_html()} \t Wrong config parameters : see {source} .\n"
+    if (pkg.activate_msg_prints):
+        print(message)
+    if (pkg.activate_result_file_txt):
+        result_file_txt.write(message_txt)
+    if (pkg.activate_result_file_html):
+        write_html_msg(result_file_html, message_html)
+         
+def error_wr_msg(result_file_html, result_file_txt, spi_cmd) :
+    """
+    Logs an error message for a failed SPI write operation.
+
+    Args:
+        result_file_html: File handle for HTML result output.
+        result_file_txt: File handle for TXT result output.
+        spi_cmd: SPI command code.
+    """
+    message = f" {error_msg()} \t max number of while iterations reached during last writing operation. \n \t Searching for {spi_cmd}"
+    message_txt = f" Error during last writing operation : max number of while iterations reached. \n \t Searching for {spi_cmd}"
+    message_html = f" {error_msg_html()} \t max number of while iterations reached during last writing operation.\n \t Searching for {spi_cmd}"
+    if (pkg.activate_msg_prints):
+        print(message)
+    if (pkg.activate_result_file_txt):
+        result_file_txt.write(message_txt)
+    if (pkg.activate_result_file_html):
+        write_html_msg(result_file_html, message_html)
+        
+        
+def error_rd_msg(result_file_html, result_file_txt, spi_cmd) :
+    """
+    Logs an error message for a failed SPI read operation.
+
+    Args:
+        result_file_html: File handle for HTML result output.
+        result_file_txt: File handle for TXT result output.
+        spi_cmd: SPI command code.
+    """
+    message = f" {error_msg()} \t max number of while iterations reached during last reading operation. \n \t Searching for {spi_cmd}"
+    message_txt = f" Error during last reading operation : max number of while iterations reached. \n \t Searching for {spi_cmd}"
+    message_html = f" {error_msg_html()} \t max number of while iterations reached during last reading operation.\n \t Searching for {spi_cmd}"
+    if (pkg.activate_msg_prints):
+        print(message)
+    if (pkg.activate_result_file_txt):
+        result_file_txt.write(message_txt)
+    if (pkg.activate_result_file_html):
+        write_html_msg(result_file_html, message_html)
+        
+    
+def reg_cmp_mismatch(result_file_html, result_file_txt, ref_data : str, rd_data : str) -> None :
+    """
+    Logs and optionally raises an error when register comparison fails.
+
+    Args:
+        result_file_html: File handle for HTML result output.
+        result_file_txt: File handle for TXT result output.
+        ref_data (str): Reference data string.
+        rd_data (str): Read data string.
+    """
+    message = f""" **** {error_msg()} \t Command #%4d: Last Reg read value (masked) = {rd_data} 
+                                                   is NOT EQUAL to compared value = {ref_data} **** \n """
+    message_txt = f""" **** ERROR : \t Command #%4d: Last Reg read value (masked) = {rd_data} 
+                                                   is NOT EQUAL to compared value = {ref_data} **** \n """
+    message_html = f""" **** {error_msg_html()} \t Command #%4d: Last Reg read value (masked) = {rd_data} 
+                                                             is NOT EQUAL to compared value = {ref_data} **** \n """
+    
+    if (pkg.activate_msg_prints):
+        print(message)
+    if (pkg.activate_result_file_txt):
+        result_file_txt.write(message_txt)
+    if (pkg.activate_result_file_html):
+        write_html_msg(result_file_html, message_html)
+        
+    if (pkg.activate_exceptions) :
+        raise Exception(message)
+        
+def mem_cmp_mismatch(result_file_html, result_file_txt, ref_data : str, rd_data : str) -> None :
+    """
+    Logs and optionally raises an error when memory comparison fails.
+
+    Args:
+        result_file_html: File handle for HTML result output.
+        result_file_txt: File handle for TXT result output.
+        ref_data (str): Reference data string.
+        rd_data (str): Read data string.
+    """
+    
+    message = f""" **** {error_msg()} \t Command #%4d: Last Mem read value = {rd_data} 
+                                          is NOT EQUAL to compared value = {ref_data} **** \n """
+    message_txt = f""" **** ERROR : \t Command #%4d: Last Mem read value = {rd_data} 
+                                          is NOT EQUAL to compared value = {ref_data} **** \n """
+    message_html = f""" **** {error_msg_html()} \t Command #%4d: Last Mem read value = {rd_data} 
+                                                    is NOT EQUAL to compared value = {ref_data} **** \n """
+    
+    if (pkg.activate_msg_prints):
+        print(message)
+    if (pkg.activate_result_file_txt):
+        result_file_txt.write(message_txt)
+    if (pkg.activate_result_file_html):
+        write_html_msg(result_file_html, message_html)
+        
+    if (pkg.activate_exceptions) :
+        raise Exception(message)
+        
+def invalid_cmp(result_file_html, result_file_txt, ref_data : list, rd_data : list) -> None :
+    """
+    Logs and optionally raises an error when compared data do not match.
+
+    Args:
+        result_file_html: File handle for HTML result output.
+        result_file_txt: File handle for TXT result output.
+        ref_data (list): Reference data list.
+        rd_data (list): Read data list.
+    """
+    
+    spaced_ref_data = ''
+    spaced_rd_data = ''
+    for data in ref_data :
+        spaced_ref_data += data + ''
+    for data in rd_data :
+        spaced_rd_data += data + ''
+        
+    message = f" \
+    The compared data are not the same : {error_msg()} \n \
+        the ref data is : {spaced_ref_data} \n \
+        the tested byte is : {spaced_rd_data} \n "
+    if (pkg.activate_msg_prints):
+        print(message)
+    if (pkg.activate_result_file_txt):
+        message_txt = f" \
+        The compared data are not the same : ERROR : \n \
+            the ref data is : {spaced_ref_data} \n \
+            the tested byte is : {spaced_rd_data} \n "
+        result_file_txt.write(message_txt)
+    if (pkg.activate_result_file_html):
+        message_html = f""" 
+        The compared data are not the same : test {error_msg_html()} <br> 
+            the ref data is : {spaced_ref_data} <br> 
+            the tested byte is : {spaced_rd_data} 
+            """
+        write_html_msg(result_file_html, message_html) 
+        result_file_html.write(end_cmp_div()) # end the compare div
+    
+    if (pkg.activate_exceptions) :
+        raise Exception(message)
+  

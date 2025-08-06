@@ -1,6 +1,7 @@
 print_msg : 
-  red_color : "rgb(255, 85, 85)"
-  green_color : "rgb(0, 128, 0)"
+  red_color : '\033[7;49;91m'
+  green_color : '\033[7;49;32m'
+  normal_color : '\033[0;5;49m'
   
 
 html_config :
@@ -12,5 +13,4 @@ html_config :
   highlight_colors :
     error_color : "rgb(255, 0, 0)"
     validation_color : "rgb(0, 179, 0)"
-
 

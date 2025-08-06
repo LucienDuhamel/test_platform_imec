@@ -22,8 +22,10 @@ Dependencies:
 Author: [Lucien Duhamel]
 Date: [2025-07-29]
 """
+from .nb_pkg import commands
+from .reports.content.error_msg import unknown_cmd
 
-def run_parse_loop(test_file, result_file_html, result_file_txt) -> dict : 
+def parse_file(test_file, result_file_html, result_file_txt) -> dict : 
     """
     Parses a test file containing SPI commands and organizes them into a dictionary.
 
@@ -54,9 +56,9 @@ def run_parse_loop(test_file, result_file_html, result_file_txt) -> dict :
         parts = line.split() # Split the line into a list of string based on spaces
         if (parts) :
             command = parts[0]
-            if command in cmd_dict :
+            if command in commands :
                 nb_cmd += 1
-                tokens = cmd_dict[command]["tokens"]
+                tokens = commands[command]["tokens"]
                 addr, data = extract_tokens(parts, tokens)
                 parsed_line = [command, addr, data]
                 parsed_file[nb_cmd]=parsed_line

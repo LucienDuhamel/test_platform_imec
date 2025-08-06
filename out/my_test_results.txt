@@ -1,21 +1,21 @@
 Results from my_test 
  
-REGWR 	 REGWR 404 FF 01   
+ REGWR 404 FF 01   
  REGWR (11) : B0 04 04 FF 00 00 00 01 00 00 00  
  Command # 1: Finished Writing  
-REGWR 	 REGWR 404 FF 03   
+ REGWR 404 FF 03   
  REGWR (11) : B0 04 04 FF 00 00 00 03 00 00 00  
  Command # 2: Finished Writing  
-REGWR 	 REGWR 404 FF 0F   
+ REGWR 404 FF 0F   
  REGWR (11) : B0 04 04 FF 00 00 00 0F 00 00 00  
  Command # 3: Finished Writing  
-REGWR 	 REGWR 0 654321FF CBA9871F   
+ REGWR 0 654321FF CBA9871F   
  REGWR (11) : B0 00 00 FF 21 43 65 1F 87 A9 CB  
  Command # 4: Finished Writing  
-REGRD 	 REGRD 0   
+ REGRD 0   
  REGRD (3) : A0 00 00  
  Command # 5: Finished Reading; read value = 0000000F   
-REGCMP 	 REGCMP 0000000F 0000000F   
+ REGCMP 0000000F 0000000F   
   
  Comparison of read data and reference data 
  **** Command #%4d: Last Reg read value (masked) = 0F
@@ -24,16 +24,16 @@ REGCMP 	 REGCMP 0000000F 0000000F
         the ref data is : 0000000F  
         the read byte is : 0000000F  
  
-REGWR 	 REGWR 0 0000000F 00000000   
+ REGWR 0 0000000F 00000000   
  REGWR (11) : B0 00 00 0F 00 00 00 00 00 00 00  
  Command # 7: Finished Writing  
-REGWR 	 REGWR 20 FFFFFFFF 12345678   
+ REGWR 20 FFFFFFFF 12345678   
  REGWR (11) : B0 20 00 FF FF FF FF 78 56 34 12  
  Command # 8: Finished Writing  
-REGRD 	 REGRD 20   
+ REGRD 20   
  REGRD (3) : A0 20 00  
  Command # 9: Finished Reading; read value = 12345678   
-REGCMP 	 REGCMP FFFFFFFF 12345678   
+ REGCMP FFFFFFFF 12345678   
   
  Comparison of read data and reference data 
  **** Command #%4d: Last Reg read value (masked) = 12

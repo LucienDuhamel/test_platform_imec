@@ -22,10 +22,10 @@ Dependencies:
 Author: [Lucien Duhamel]
 Date: [2025-07-29]
 """
-from .nb_pkg import commands
+from .nb_pkg import commands, TextIO
 from .reports.content.error_msg import unknown_cmd
 
-def run_parse_loop(test_file, result_file_html, result_file_txt) -> dict : 
+def parse_file(test_file: TextIO, result_file_html: TextIO, result_file_txt: TextIO) -> dict : 
     """
     Parses a test file containing SPI commands and organizes them into a dictionary.
 

@@ -1,2 +1,8 @@
-from spi_driver import *
-from spi_pkg import *
+__all__ = [
+    "spi_driver",
+]
+
+from .spi_driver import (
+    cnfg_master_spi,        
+    xfer,      
+)

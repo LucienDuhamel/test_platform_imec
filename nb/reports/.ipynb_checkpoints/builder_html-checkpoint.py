@@ -6,15 +6,12 @@
         - Used by test scripts to log results in a structured format.
         - Facilitates easy viewing of test results in both HTML and TXT formats.
 """
-from ..nb_pkg import TextIO
-
-from .reports_pkg import CSS_Object
 from .reports_pkg import text_colors, highlight_colors
 
 
 
 # Function which launch a test and writes in an html result file 
-def init_html_result_file(test_file_name: str, css_file: CSS_Object) -> TextIO:
+def init_html_result_file(test_file_name, test_file_path, css_file):
     """
     Initializes and opens an HTML result file for writing test results.
 
@@ -45,7 +42,7 @@ def end_html_result_file(result_file_html) -> None:
 
 
 
-def initiate_html_content(title : str, style_css : CSS_Object, main_header_content : str) -> str :
+def initiate_html_content(title : str, style_css : str, main_header_content : str) -> str :
     """
     Generates the initial HTML content for the result file, including headers and styles.
 
@@ -158,7 +155,7 @@ def end_span() -> str :
     return "</span>"
 
 
-def write_html_msg(result_file_html: TextIO, content : str) -> None :
+def write_html_msg(result_file_html, content : str) -> None :
     """
     Writes a message inside a <p> tag to the HTML result file.
 

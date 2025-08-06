@@ -22,7 +22,6 @@ Dependencies:
 Author: [Lucien Duhamel]
 Date: [2025-07-29]
 """
-
 import package as main_pkg
 
 from . import formater as formater
@@ -30,10 +29,18 @@ from .functions import is_empty
 from . import nb_pkg as nb_pkg
 
 
-import reports as reports
+from .reports.content import status_msg, error_msg, valid_msg
+from . import reports as reports
 from . import spi
 
-def command_disjunction(spi_handler, result_file_html, result_file_txt, indice_command_from_test_file : int, parsed_line : list, last_rd_data : list) -> None :
+def command_disjunction(
+    spi_handler: nb_pkg.SPI_Object, 
+    result_file_html: nb_pkg.TextIO, 
+    result_file_txt: nb_pkg.TextIO, 
+    indice_command_from_test_file : int, 
+    parsed_line : list, 
+    last_rd_data : list,
+) -> list[int]|None :
     """
     Executes the appropriate SPI command based on the parsed command line.
 
@@ -52,7 +59,7 @@ def command_disjunction(spi_handler, result_file_html, result_file_txt, indice_c
         list: Updated last_rd_data after command execution.
     """
     formated_line = formater.format_parsed_line(parsed_line)
-    reports.executing_line_msg(result_file_html, result_file_txt, formated_line)
+    status_msg.executing_line_msg(result_file_html, result_file_txt, formated_line)
     
     command = parsed_line[0]
     if ((command == "REGRD" )):
@@ -61,29 +68,29 @@ def command_disjunction(spi_handler, result_file_html, result_file_txt, indice_c
         last_rd_data = rd_transaction_behaviour(spi_handler, result_file_html, result_file_txt, indice_command_from_test_file, command, spi_cmd, rd_addr)
 
     elif ((command == "REGWR" )):
-        spi_cmd = nb_pkg.commands["REGRD"]["spi_pattern"]
+        spi_cmd = nb_pkg.commands["REGWR"]["spi_pattern"]
         wr_addr = parsed_line[1]
         wr_data = parsed_line[2]
         wr_transaction_behaviour(spi_handler, result_file_html, result_file_txt, indice_command_from_test_file, command, spi_cmd, wr_addr, wr_data)
 
     elif (command == "MEMRD") :
-        spi_cmd = nb_pkg.commands["REGRD"]["spi_pattern"]
+        spi_cmd = nb_pkg.commands["MEMRD"]["spi_pattern"]
         rd_addr = parsed_line[1]
-        last_rd_data = rd_transaction_behaviour(spi_handler, result_file_html, indice_command_from_test_file, result_file_txt, command, spi_cmd, rd_addr)
+        last_rd_data = rd_transaction_behaviour(spi_handler, result_file_html, result_file_txt, indice_command_from_test_file, command, spi_cmd, rd_addr)
 
     elif (command == "MEMWR"):
-        spi_cmd = nb_pkg.commands["REGRD"]["spi_pattern"]
+        spi_cmd = nb_pkg.commands["MEMWR"]["spi_pattern"]
         wr_addr = parsed_line[1]
         wr_data = parsed_line[2]
         wr_transaction_behaviour(spi_handler, result_file_html, result_file_txt, indice_command_from_test_file, command, spi_cmd, wr_addr, wr_data)
 
     elif (command == "MEMRDM") :
-        spi_cmd = nb_pkg.commands["REGRD"]["spi_pattern"]
+        spi_cmd = nb_pkg.commands["MEMRDM"]["spi_pattern"]
         rd_addr = parsed_line[1] # <=> None here
         last_rd_data = rd_transaction_behaviour(spi_handler, result_file_html, result_file_txt, indice_command_from_test_file, command, spi_cmd, rd_addr)
 
     elif (command == "MEMWRM") :
-        spi_cmd = nb_pkg.commands["REGRD"]["spi_pattern"]
+        spi_cmd = nb_pkg.commands["MEMWRM"]["spi_pattern"]
         wr_addr = parsed_line[1] # <=> None here
         wr_data = parsed_line[2] # <=> None here
         wr_transaction_behaviour(spi_handler, result_file_html, result_file_txt, indice_command_from_test_file, command, spi_cmd, wr_addr, wr_data)
@@ -94,24 +101,32 @@ def command_disjunction(spi_handler, result_file_html, result_file_txt, indice_c
         ref_data = ref_packets[nb_pkg.nb_token_to_compare_reg_cmp::]
         
         if (is_empty(last_rd_data)):
-            reports.no_rd_data(result_file_html, result_file_txt)
+            error_msg.no_rd_data(result_file_html, result_file_txt)
         else :
-            reg_cmp_behaviour(result_file_html, result_file_txt, command, ref_mask, ref_data, last_rd_data)
+            reg_cmp_behaviour(result_file_html, result_file_txt, ref_mask, ref_data, last_rd_data)
             
     elif (command == "MEMCMP"):
         data_ref = parsed_line[2] 
         if (is_empty(last_rd_data)):
-            reports.no_rd_data(result_file_html, result_file_txt)
+            error_msg.no_rd_data(result_file_html, result_file_txt)
         else :
-            mem_cmp_behaviour(result_file_html, result_file_txt, command, data_ref, last_rd_data)
+            mem_cmp_behaviour(result_file_html, result_file_txt, data_ref, last_rd_data)
 
     else :
-        reports.unknown_cmd(result_file_html, result_file_txt, command)
+        error_msg.unknown_cmd(result_file_html, result_file_txt, command)
     return last_rd_data
 
 
 
-def rd_transaction_behaviour(spi_handler, result_file_html, result_file_txt, indice_command_from_test_file : int, command : str, spi_cmd : int, rd_addr : list) -> None:
+def rd_transaction_behaviour(
+    spi_handler: nb_pkg.SPI_Object,
+    result_file_html: nb_pkg.TextIO,
+    result_file_txt: nb_pkg.TextIO,
+    indice_command_from_test_file: int,
+    command: str,
+    spi_cmd: int,
+    rd_addr: list,
+) -> list[int]:
     """
     Executes a read transaction over SPI, formats and reports the read data.
 
@@ -129,16 +144,25 @@ def rd_transaction_behaviour(spi_handler, result_file_html, result_file_txt, ind
     """
     valid_rd, rd_line = rd_spi_transaction(spi_handler, result_file_html, result_file_txt, command, spi_cmd, rd_addr)
     nb_hex_per_token_data = nb_pkg.nb_bytes_per_token_data * 2 # because one byte = 2 hex char
-    formated_rd_line = format_rd_data(rd_line, nb_hex_per_token_data)
+    formated_rd_line = formater.format_rd_data(rd_line, nb_hex_per_token_data)
     if valid_rd :
-        reports.valid_rd_msg(result_file_html, result_file_txt, indice_command_from_test_file, formated_rd_line)
+        valid_msg.valid_rd_msg(result_file_html, result_file_txt, indice_command_from_test_file, formated_rd_line)
     else :
-        spi_cmd_hex = from_int_to_hex(spi_cmd)
-        reports.error_rd_msg(result_file_html, result_file_txt, spi_cmd_hex)
+        spi_cmd_hex = formater.from_int_to_hex(spi_cmd)
+        error_msg.error_rd_msg(result_file_html, result_file_txt, spi_cmd_hex)
     return rd_line
         
         
-def wr_transaction_behaviour(spi_handler, result_file_html, result_file_txt, indice_command_from_test_file : int, command : str, spi_cmd : int, wr_addr : list, wr_data : list) -> None:
+def wr_transaction_behaviour(
+    spi_handler: nb_pkg.SPI_Object,
+    result_file_html: nb_pkg.TextIO,
+    result_file_txt: nb_pkg.TextIO,
+    indice_command_from_test_file : int,
+    command : str,
+    spi_cmd : int,
+    wr_addr : list,
+    wr_data : list,
+) -> None:
     """
     Executes a write transaction over SPI.
 
@@ -157,16 +181,22 @@ def wr_transaction_behaviour(spi_handler, result_file_html, result_file_txt, ind
     """
     valid_wr = wr_spi_transaction(spi_handler, result_file_html, result_file_txt, command, spi_cmd, wr_addr, wr_data)
     if valid_wr :
-        reports.valid_wr_msg(result_file_html, result_file_txt, indice_command_from_test_file)
+        valid_msg.valid_wr_msg(result_file_html, result_file_txt, indice_command_from_test_file)
     else :
-        spi_cmd_hex = from_int_to_hex(spi_cmd)
-        reports.error_wr_msg(result_file_html, result_file_txt, spi_cmd_hex)
+        spi_cmd_hex = formater.from_int_to_hex(spi_cmd)
+        error_msg.error_wr_msg(result_file_html, result_file_txt, spi_cmd_hex)
 
 
 
 
 
-def reg_cmp_behaviour(result_file_html, result_file_txt, command : str, ref_mask : list, ref_data : list, last_rd_data : list) -> None :
+def reg_cmp_behaviour(
+    result_file_html: nb_pkg.TextIO,
+    result_file_txt: nb_pkg.TextIO,
+    ref_mask : list,
+    ref_data : list,
+    last_rd_data : list
+) -> None :
     """
     Compares register data read from SPI with reference data using a mask (only masked bytes are compared).
 
@@ -181,40 +211,47 @@ def reg_cmp_behaviour(result_file_html, result_file_txt, command : str, ref_mask
     Returns:
         None
     """
-    reports.starting_cmp(result_file_html, result_file_txt)
+    status_msg.starting_cmp(result_file_html, result_file_txt)
     storage = "reg"
     
     # Data formatting to be able to compare
-    parsed_ref_mask = formater.parse_list_of_packets(ref_mask, "int")
-    parsed_ref_data = formater.parse_list_of_packets(ref_data, "int")
+    parsed_ref_mask: list[int] = formater.parse_list_of_packets(ref_mask, "int")
+    parsed_ref_data: list[int] = formater.parse_list_of_packets(ref_data, "int")
     
     nb_rd_bytes = len(last_rd_data)
     len_ref_data = len(parsed_ref_data)
     test_result = "valid"
     if (nb_rd_bytes != len_ref_data): 
         # print("these are the data mismatch :", ref_data, last_rd_data)
-        reports.number_of_packets_mismatch(result_file_html, result_file_txt, len_ref_data, nb_rd_bytes)
+        error_msg.number_of_bytes_mismatch(result_file_html, result_file_txt, len_ref_data, nb_rd_bytes)
         test_result = "error"
     else :
-        #Here from the MSB to the LSB 
-        for hexa_byte_cnt in range(len_ref_data):
-            if (parsed_ref_mask[hexa_byte_cnt] & parsed_ref_data[hexa_byte_cnt] != 0):
-                ref_byte = parsed_ref_data[hexa_byte_cnt] # we compare only data bytes : not mask bytes
-                rd_byte = last_rd_data[hexa_byte_cnt]
-                one_byte_test_result = equal_bytes(result_file_html, result_file_txt, ref_byte, rd_byte, storage) # if not equal : raise Exception : see messsages.ipynb
-                if (one_byte_test_result == "false"):
+        for byte_cnt in range(len_ref_data):
+            # if the mask is not 0, we compare the data
+            if (parsed_ref_mask[byte_cnt] & parsed_ref_data[byte_cnt] != 0):
+                # we compare only data bytes : not mask bytes
+                ref_byte: int = parsed_ref_data[byte_cnt]
+                rd_byte:  int = last_rd_data[byte_cnt]
+                
+                one_byte_test_result = equal_bytes(result_file_html, result_file_txt, ref_byte, rd_byte, storage)
+                if not one_byte_test_result :
                     test_result = "error"
                 
     nb_hex_per_token_data = nb_pkg.nb_bytes_per_token_data * 2          
-    formated_ref_data = formater.format_rd_data(parsed_ref_data, nb_hex_per_token_data)
-    formated_rd_data = formater.format_rd_data(last_rd_data, nb_hex_per_token_data)
+    formated_ref_data: str = formater.format_rd_data(parsed_ref_data, nb_hex_per_token_data)
+    formated_rd_data:  str = formater.format_rd_data(last_rd_data, nb_hex_per_token_data)
     if (test_result == "valid"):    
-        reports.valid_cmp(result_file_html, result_file_txt, formated_ref_data, formated_rd_data)
+        valid_msg.valid_cmp(result_file_html, result_file_txt, formated_ref_data, formated_rd_data)
     else :
-        reports.invalid_cmp(result_file_html, result_file_txt, formated_ref_data, formated_rd_data)
+        error_msg.invalid_cmp(result_file_html, result_file_txt, formated_ref_data, formated_rd_data)
         
 
-def mem_cmp_behaviour(result_file_html, result_file_txt, command : str, data_ref : list, last_rd_data : list) -> None :
+def mem_cmp_behaviour(
+    result_file_html: nb_pkg.TextIO,
+    result_file_txt: nb_pkg.TextIO,
+    ref_data : list[str],
+    last_rd_data : list[int]
+) -> None :
     """
     Compares memory data read from SPI with reference data.
 
@@ -228,30 +265,42 @@ def mem_cmp_behaviour(result_file_html, result_file_txt, command : str, data_ref
     Returns:
         None
     """
-    reports.starting_cmp(result_file_html, result_file_txt)
+    status_msg.starting_cmp(result_file_html, result_file_txt)
     storage = "mem"
+    
+    parsed_ref_data: list[int] = formater.parse_list_of_packets(ref_data, "int")
     nb_rd_bytes = len(last_rd_data)
-    len_ref_data = len(data_ref)
+    len_ref_data = len(parsed_ref_data)
     test_result = True
     if (len_ref_data != nb_rd_bytes): 
         # print("these are the number of bytes mismatch :", len_ref_data, nb_rd_bytes)
-        reports.number_of_packets_mismatch(result_file_html, result_file_txt, len_ref_data, nb_rd_bytes)
+        error_msg.number_of_bytes_mismatch(result_file_html, result_file_txt, len_ref_data, nb_rd_bytes)
         test_result = False
     else :
         #Here from the MSB to the LSB 
-        for hexa_packet_cnt in range(len_ref_data):
-            rd_hex_packet = last_rd_data[hexa_packet_cnt]
-            hex_packet_ref = data_ref[hexa_packet_cnt]
-            one_byte_test_result = equal_bytes(result_file_html, result_file_txt, hex_packet_ref, rd_hex_packet, storage)
+        for token_cnt in range(len_ref_data):
+            rd_token : int = last_rd_data[token_cnt]
+            ref_token: int = parsed_ref_data[token_cnt]
+            one_byte_test_result = equal_bytes(result_file_html, result_file_txt, ref_token, rd_token, storage)
             if not one_byte_test_result:
                 test_result = False
+    
+    nb_hex_per_token_data = nb_pkg.nb_bytes_per_token_data * 2           
+    formated_ref_data: str = formater.list_to_string(ref_data)
+    formated_rd_data:  str = formater.format_rd_data(last_rd_data, nb_hex_per_token_data)
     if (test_result):    
-        reports.valid_cmp(result_file_html, result_file_txt, data_ref, last_rd_data)
+        valid_msg.valid_cmp(result_file_html, result_file_txt, formated_ref_data, formated_rd_data)
     else :
-        reports.invalid_cmp(result_file_html, result_file_txt, data_ref, last_rd_data)
+        error_msg.invalid_cmp(result_file_html, result_file_txt, formated_ref_data, formated_rd_data)
     
 
-def equal_bytes(result_file_html, result_file_txt, ref_byte : int, rd_byte : int, storage : str) -> bool :
+def equal_bytes(
+    result_file_html: nb_pkg.TextIO,
+    result_file_txt: nb_pkg.TextIO,
+    ref_byte : int,
+    rd_byte : int,
+    storage : str
+) -> bool :
     """
     Compares two bytes and logs the result.
 
@@ -272,19 +321,26 @@ def equal_bytes(result_file_html, result_file_txt, ref_byte : int, rd_byte : int
     
     if (ref_byte != rd_byte): # in case hex data differs
         if (storage == "reg"):
-            reports.reg_cmp_mismatch(result_file_html, result_file_txt, ref_hex_byte, rd_hex_byte)
+            error_msg.reg_cmp_mismatch(result_file_html, result_file_txt, ref_hex_byte, rd_hex_byte)
         elif (storage == "mem"):
-            reports.mem_cmp_mismatch(result_file_html, result_file_txt, ref_hex_byte, rd_hex_byte)
+            error_msg.mem_cmp_mismatch(result_file_html, result_file_txt, ref_hex_byte, rd_hex_byte)
         return False
     else :
         if (storage == "reg"):
-            reports.reg_cmp_match(result_file_html, result_file_txt, ref_hex_byte, rd_hex_byte)
+            valid_msg.reg_cmp_match(result_file_html, result_file_txt, ref_hex_byte, rd_hex_byte)
         elif (storage == "mem"):
-            reports.mem_cmp_match(result_file_html, result_file_txt, ref_hex_byte, rd_hex_byte)
+            valid_msg.mem_cmp_match(result_file_html, result_file_txt, ref_hex_byte, rd_hex_byte)
         return True
 
 
-def rd_spi_transaction(spi_handler, result_file_html, result_file_txt, command : str, spi_cmd : int, addr : list) -> tuple[bool, list]:
+def rd_spi_transaction(
+    spi_handler: nb_pkg.SPI_Object,
+    result_file_html: nb_pkg.TextIO,
+    result_file_txt: nb_pkg.TextIO,
+    command : str,
+    spi_cmd : int,
+    addr : list
+) -> tuple[bool, list[int]]:
     """
     Performs a low-level SPI read transaction.
 
@@ -300,7 +356,7 @@ def rd_spi_transaction(spi_handler, result_file_html, result_file_txt, command :
         tuple: (valid_rd (bool), rd_line (list)) indicating if read was successful and the data read.
     """
     
-    rd_line = []
+    rd_line: list[int] = []
     data_number_token_to_read = nb_pkg.dict_data_number_token_to_read[command]
     
     # Send command to SPI
@@ -315,7 +371,7 @@ def rd_spi_transaction(spi_handler, result_file_html, result_file_txt, command :
             
     transmitted_line_int = [spi_cmd] + formated_addr
     number_of_bytes, transmitted_line_joined = formater.format_sent_line(transmitted_line_int)
-    reports.sending_msg(result_file_html, result_file_txt, command, transmitted_line_joined, number_of_bytes)
+    status_msg.sending_msg(result_file_html, result_file_txt, command, transmitted_line_joined, number_of_bytes)
         
     # Waiting for command 
     valid_rd = wait_for_spi_cmd(spi_handler, spi_cmd) 
@@ -330,7 +386,15 @@ def rd_spi_transaction(spi_handler, result_file_html, result_file_txt, command :
 
 
 
-def wr_spi_transaction(spi_handler, result_file_html, result_file_txt, command : str, spi_cmd : int, addr : list, data : list) -> bool :        
+def wr_spi_transaction(
+    spi_handler: nb_pkg.SPI_Object,
+    result_file_html: nb_pkg.TextIO,
+    result_file_txt: nb_pkg.TextIO,
+    command : str,
+    spi_cmd : int,
+    addr : list,
+    data : list
+) -> bool :        
     """
     Performs a low-level SPI write transaction.
 
@@ -363,24 +427,26 @@ def wr_spi_transaction(spi_handler, result_file_html, result_file_txt, command :
     
     # Send data to SPI
     if (data):
-        formated_data = []
+        formated_data: list[int] = []
         for indice_token in range (data_number_token_to_write) : 
             token_to_send = data[indice_token]
             parsed_data_token = formater.parse_packet(token_to_send,"int")
             formated_token = formater.format_token_field(nb_pkg.nb_bytes_per_token_data, parsed_data_token)
-            formated_data = formated_data + formated_token 
             spi.xfer(spi_handler, formated_token)
+            
+            # Only for results 
+            formated_data = formated_data + formated_token 
     
     transmitted_line_int = [spi_cmd] + formated_addr + formated_data
     number_of_bytes, transmitted_line_joined = formater.format_sent_line(transmitted_line_int)
-    reports.sending_msg(result_file_html, result_file_txt, command, transmitted_line_joined, number_of_bytes)
+    status_msg.sending_msg(result_file_html, result_file_txt, command, transmitted_line_joined, number_of_bytes)
         
     # Waiting for command 
     valid_wr = wait_for_spi_cmd(spi_handler, spi_cmd)        
     return valid_wr
 
 
-def wait_for_spi_cmd(spi_handler, spi_cmd : int) -> bool:
+def wait_for_spi_cmd(spi_handler: nb_pkg.SPI_Object, spi_cmd : int) -> bool:
     """
     Waits for a specific SPI command to be received.
 
@@ -394,12 +460,12 @@ def wait_for_spi_cmd(spi_handler, spi_cmd : int) -> bool:
     
     # len_cmd = len(spi_cmd)
     nb_iterations = 0
-    current_byte = []
+    received_byte: int = 0
     cmd_received = False
     # print(f"searching for command {spi_cmd}")
-    while ((current_byte != spi_cmd) and (nb_iterations < main_pkg.max_while_iterations)) :
-        current_byte_list = spi.xfer(spi_handler, [0x00])
-        current_byte = current_byte_list[0]
+    while ((received_byte != spi_cmd) and (nb_iterations < main_pkg.max_while_iterations)) :
+        received_byte_list: list[int]= spi.xfer(spi_handler, [0x00])
+        received_byte = received_byte_list[0]
         # if current_byte != 0:
         #     potential_cmd_byte = current_byte
         #     if len_cmd > 1 :
@@ -413,3 +479,5 @@ def wait_for_spi_cmd(spi_handler, spi_cmd : int) -> bool:
     else :
         cmd_received = False
     return cmd_received
+
+

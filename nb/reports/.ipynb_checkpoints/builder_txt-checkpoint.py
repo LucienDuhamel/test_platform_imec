@@ -1,6 +1,4 @@
-from ..nb_pkg import TextIO
-
-def init_txt_result_file(test_file_name: str)-> TextIO:
+def init_txt_result_file(test_file_name):
     """
     Initializes and opens a TXT result file for writing test results.
 
@@ -18,7 +16,7 @@ def init_txt_result_file(test_file_name: str)-> TextIO:
     result_file_txt.write(result_file_txt_title)
     return result_file_txt
 
-def end_txt_result_file(result_file_txt: TextIO) -> None:
+def end_txt_result_file(result_file_txt) -> None:
     """
     Writes the TXT footer and closes the TXT result file.
     """

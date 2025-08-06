@@ -1,8 +1,6 @@
-from ....package import (
-    activate_msg_prints, 
-    activate_result_file_html, 
-    activate_result_file_txt
-)
+import package as pkg
+
+from ...nb_pkg import TextIO
 
 from ..builder_html import (
     end_cmp_div,
@@ -10,9 +8,14 @@ from ..builder_html import (
     write_html_msg
 )
 
-from ..builder_txt import valid_msg
+from ..builder_print import valid_msg
 
-def reg_cmp_match(result_file_html, result_file_txt, ref_data : str, rd_data : str) -> None :
+def reg_cmp_match(
+    result_file_html: TextIO,
+    result_file_txt: TextIO,
+    ref_data : str,
+    rd_data : str,
+) -> None :
     """
     Logs a successful register comparison.
 
@@ -29,14 +32,19 @@ def reg_cmp_match(result_file_html, result_file_txt, ref_data : str, rd_data : s
     **** Command #%4d: Last Reg read value (masked) = {rd_data}
     is equal to compared value =                      {ref_data} **** 
     """
-    if (activate_msg_prints):
+    if (pkg.activate_msg_prints):
         print(message)
-    if (activate_result_file_txt):
+    if (pkg.activate_result_file_txt):
         result_file_txt.write(message)
-    if (activate_result_file_html):
+    if (pkg.activate_result_file_html):
         write_html_msg(result_file_html, message_html)
         
-def mem_cmp_match(result_file_html, result_file_txt, ref_data : str, rd_data : str) -> None :
+def mem_cmp_match(
+    result_file_html: TextIO,
+    result_file_txt: TextIO,
+    ref_data : str,
+    rd_data : str,
+) -> None :
     """
     Logs a successful memory comparison.
 
@@ -54,14 +62,19 @@ def mem_cmp_match(result_file_html, result_file_txt, ref_data : str, rd_data : s
     is equal to compared value =             {ref_data} **** 
     """   
         
-    if (activate_msg_prints):
+    if (pkg.activate_msg_prints):
         print(message)
-    if (activate_result_file_txt):
+    if (pkg.activate_result_file_txt):
         result_file_txt.write(message)
-    if (activate_result_file_html):
+    if (pkg.activate_result_file_html):
         write_html_msg(result_file_html, message_html)
         
-def valid_rd_msg(result_file_html, result_file_txt, indice_command_from_test_file, rd_tokens) :
+def valid_rd_msg(
+    result_file_html: TextIO,
+    result_file_txt: TextIO,
+    indice_command_from_test_file: int,
+    rd_tokens: str,
+) -> None:
     """
     Logs a successful read operation.
 
@@ -73,14 +86,18 @@ def valid_rd_msg(result_file_html, result_file_txt, indice_command_from_test_fil
     """
     
     message = f"Command # {indice_command_from_test_file}: Finished Reading; read value = {rd_tokens}  \n"
-    if (activate_msg_prints):
+    if (pkg.activate_msg_prints):
         print(message)
-    if (activate_result_file_txt):
+    if (pkg.activate_result_file_txt):
         result_file_txt.write(message)
-    if (activate_result_file_html):
+    if (pkg.activate_result_file_html):
         write_html_msg(result_file_html, message)
         
-def valid_wr_msg(result_file_html, result_file_txt, indice_command_from_test_file) :
+def valid_wr_msg(
+    result_file_html: TextIO,
+    result_file_txt: TextIO,
+    indice_command_from_test_file: int,
+) -> None:
     """
     Logs a successful write operation.
 
@@ -91,15 +108,20 @@ def valid_wr_msg(result_file_html, result_file_txt, indice_command_from_test_fil
     """
     
     message = f"Command # {indice_command_from_test_file}: Finished Writing  \n"
-    if (activate_msg_prints):
+    if (pkg.activate_msg_prints):
         print(message)
-    if (activate_result_file_txt):
+    if (pkg.activate_result_file_txt):
         result_file_txt.write(message)
-    if (activate_result_file_html):
+    if (pkg.activate_result_file_html):
         write_html_msg(result_file_html, message)
     
 
-def valid_cmp_msg(result_file_html, result_file_txt, ref_data : list, rd_data : list) -> None:
+def valid_cmp(
+    result_file_html: TextIO,
+    result_file_txt: TextIO,
+    ref_data : str,
+    rd_data : str,
+) -> None:
     """
     Logs a successful data comparison.
 
@@ -110,31 +132,31 @@ def valid_cmp_msg(result_file_html, result_file_txt, ref_data : list, rd_data : 
         rd_data (list): Read data list.
     """
     
-    spaced_ref_data = ''
-    spaced_rd_data = ''
-    for data in ref_data :
-        spaced_ref_data += data + ''
-    for data in rd_data :
-        spaced_rd_data += data + ''
+    # spaced_ref_data = ''
+    # spaced_rd_data = ''
+    # for data in ref_data :
+    #     spaced_ref_data += data + ''
+    # for data in rd_data :
+    #     spaced_rd_data += data + ''
         
     message = f"""The compared data are the same : {valid_msg()}
-        the ref data is : {spaced_ref_data} 
-        the read byte is : {spaced_rd_data} \n \n"""
+        the ref data is : {ref_data} 
+        the read byte is : {rd_data} \n \n"""
     
     message_txt = f""" The compared data are the same : test SUCCESSFUL :
-        the ref data is : {spaced_ref_data} 
-        the read byte is : {spaced_rd_data} \n \n"""
+        the ref data is : {ref_data} 
+        the read byte is : {rd_data} \n \n"""
         
     # Inside a <p>, use <br> to go to a new line 
     message_html = f""" 
     The compared data are the same : test {valid_msg_html()} <br> 
-        the ref data is : {spaced_ref_data} <br>
-        the tested data is : {spaced_rd_data} 
+        the ref data is : {ref_data} <br>
+        the tested data is : {rd_data} 
         """
-    if (activate_msg_prints):
+    if (pkg.activate_msg_prints):
         print(message)
-    if (activate_result_file_txt):
+    if (pkg.activate_result_file_txt):
         result_file_txt.write(message_txt)
-    if (activate_result_file_html):
+    if (pkg.activate_result_file_html):
         write_html_msg(result_file_html, message_html)
         result_file_html.write(end_cmp_div()) # end the compare div

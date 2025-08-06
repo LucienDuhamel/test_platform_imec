@@ -1,6 +1,7 @@
 import yaml
+import os
 
-def is_empty(arg : str):
+def is_empty(arg : list) -> bool:
     """
     Checks if the given argument is empty or None.
     
@@ -9,7 +10,7 @@ def is_empty(arg : str):
     Returns:
         bool: True if the argument is empty or None, False otherwise.
     """
-    if (arg is None or arg == ""):
+    if (arg is None or arg == []):
         return True 
     else :
         return False

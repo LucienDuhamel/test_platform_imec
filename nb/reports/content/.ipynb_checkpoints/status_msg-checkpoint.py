@@ -1,48 +1,44 @@
-def executing_line_msg(result_file_html, result_file_txt, command : str, parsed_line : list) -> None :
+import package as pkg
+
+from ..builder_html import write_html_msg, start_cmp_div
+
+
+def executing_line_msg(result_file_html, result_file_txt, line : str) -> None :
     """
     Logs the execution of a command line.
 
     Args:
         result_file_html: File handle for HTML result output.
         result_file_txt: File handle for TXT result output.
-        command (str): Command name.
-        parsed_line (list): Parsed command line.
+        line (str): command line which is currently executed.
     """
     
-    command = parsed_line[0]
-    line = [command]
-    for token_field in parsed_line[1::] :
-        if (token_field):
-            line = line + token_field
-    line_joined = from_list_to_str(line)
-    message = f"{command} \t {line_joined}  \n " 
-    if (activate_msg_prints):
+    message = f" {line}  \n " 
+    if (pkg.activate_msg_prints):
         print(message)
-    if (activate_result_file_txt):
+    if (pkg.activate_result_file_txt):
         result_file_txt.write(message)
-    if (activate_result_file_html):
+    if (pkg.activate_result_file_html):
         write_html_msg(result_file_html, message)
 
 
-def sending_msg (result_file_html, result_file_txt, command : str, line : list) -> None :
+def sending_msg (result_file_html, result_file_txt, command : str, line : str, number_of_bytes : int) -> None :
     """
     Logs the sending of a command and its data.
-
     Args:
         result_file_html: File handle for HTML result output.
         result_file_txt: File handle for TXT result output.
         command (str): Command name.
-        line (list): Data sent.
+        line (str): Data sent.
+        number_of_bytes (int): Number of bytes in the data sent.
     """
     
-    number_of_bytes = len(line) 
-    line_joined = from_list_to_str(line)
-    message = f"{command} ({number_of_bytes}) : {line_joined} \n "
-    if (activate_msg_prints):
+    message = f"{command} ({number_of_bytes}) : {line} \n "
+    if (pkg.activate_msg_prints):
         print(message)
-    if (activate_result_file_txt):
+    if (pkg.activate_result_file_txt):
         result_file_txt.write(message)
-    if (activate_result_file_html):
+    if (pkg.activate_result_file_html):
         write_html_msg(result_file_html, message)
     
 def starting_cmp(result_file_html, result_file_txt) -> None :
@@ -55,11 +51,11 @@ def starting_cmp(result_file_html, result_file_txt) -> None :
     """
     
     message = f"Comparison of read data and reference data \n" 
-    if (activate_msg_prints):
+    if (pkg.activate_msg_prints):
         print(message)
-    if (activate_result_file_txt):
+    if (pkg.activate_result_file_txt):
         message_txt = f" \n Comparison of read data and reference data \n" 
         result_file_txt.write(message_txt)
-    if (activate_result_file_html):
+    if (pkg.activate_result_file_html):
         html_cmp = start_cmp_div()
         result_file_html.write(html_cmp) 

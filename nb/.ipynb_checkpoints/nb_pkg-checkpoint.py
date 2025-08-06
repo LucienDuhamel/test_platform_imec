@@ -1,12 +1,6 @@
-import _io
-import pynq
-from typing import TypeAlias
+import os 
 
 from .functions import load_config
-
-# Define a type alias
-TextIO: TypeAlias = _io.TextIOWrapper
-SPI_Object: TypeAlias = pynq.mmio.MMIO
 
 path_to_commands = "commands.yaml"
 commands = load_config(path_to_commands)

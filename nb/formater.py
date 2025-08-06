@@ -15,9 +15,10 @@ Intended usage:
     - Ensures correct byte order and padding for hardware compatibility.
 """
 
-def from_hex_to_bit(hex_value : str) :
+def from_hex_to_bit(hex_value : str) -> str:
     """
     Converts a hexadecimal string to its 8-bit binary representation.
+    Not used in code but can be useful for debugging or display purposes.
 
     Args:
         hex_value (str): Hexadecimal string (e.g., 'A3').
@@ -170,10 +171,10 @@ def parse_packet (data : str, mode : str) -> list :
         Exception: If mode is not 'str' or 'int'.
 
     Example:
-        >>> parse_packet('1F2A', 'str')
-        ['1F', '2A']
-        >>> parse_packet('1F2A', 'int')
-        [31, 42]
+        >>> parse_packet('1FFF1632', 'str')
+        ['1F', 'FF', '16', '32']
+        >>> parse_packet('1FFF1632', 'int')
+        [31, 255, 22, 50]
     """
     
     bytes_list : list[str|int]= []
@@ -214,7 +215,7 @@ def parse_list_of_packets(list_of_packets : list, mode : str) -> list:
 
 
 
-def format_token_field (ref_byte_length : int, field_data : list) -> list:
+def format_token_field (ref_byte_length : int, field_data : list[int]) -> list:
     """
     Pads a list of bytes with zeros on the left to match the required length, then reverses for LSB-first order.
 
@@ -226,8 +227,8 @@ def format_token_field (ref_byte_length : int, field_data : list) -> list:
         list: Padded and reversed list.
 
     Example:
-        >>> format_token_field(2, [0x20])
-        [32, 0]
+        >>> format_token_field(2,[18])
+        [18, 0]
     """
     
     nb_bytes = len(field_data)
@@ -238,7 +239,7 @@ def format_token_field (ref_byte_length : int, field_data : list) -> list:
     return field_data
 
 # Implements the basic behaviour of the read commands
-def format_rd_data (rd_line : list, nb_hex_per_packet : int) :
+def format_rd_data (rd_line : list[int], nb_hex_per_packet : int) -> str:
     """
     Formats a list of read bytes into a string of hex packets.
 
@@ -262,7 +263,7 @@ def format_rd_data (rd_line : list, nb_hex_per_packet : int) :
 
 
 
-def from_list_to_str(L : list):
+def from_list_to_str(L : list[int|str]) -> str:
     """
     Converts a list of elements to a single space-separated string.
 
@@ -271,25 +272,16 @@ def from_list_to_str(L : list):
 
     Returns:
         str: Space-separated string of elements.
+        
+    Example:
+        >>> from_list_to_str([31, 255, 22, 50, 86, 120, 154, 188])
+        '31 255 22 50 86 120 154 188 '
     """
     
     content = ""
     for element in L :
         content += str(element) + " "
     return content
-
-import doctest
-doctest.testmod()
-
-# def format_cmp_data(data, mode):
-#     int_list = parse_list_of_packets(data, "int")
-#     return int_list
-
-
-# data = ["01234567", "76543210"]
-# L = format_cmp_data(data, "int")
-# print(L)
-# print(type(L[0]))
 
 
 def format_parsed_line(parsed_line : list) -> str:
@@ -307,8 +299,10 @@ def format_parsed_line(parsed_line : list) -> str:
     line = [command]
     for token_field in parsed_line[1::] :
         if (token_field):
-            line.append(token_field)
-    return from_list_to_str(line)
+            for token in token_field :
+                line.append(token)
+    formated_line = from_list_to_str(line)
+    return formated_line
 
 
 def format_sent_line(sent_line : list) -> tuple[int, str]:
@@ -326,3 +320,8 @@ def format_sent_line(sent_line : list) -> tuple[int, str]:
     number_of_bytes = len(transmitted_line_hex) 
     transmitted_line_joined = from_list_to_str(transmitted_line_hex)
     return number_of_bytes, transmitted_line_joined
+
+
+
+# import doctest
+# doctest.testmod()

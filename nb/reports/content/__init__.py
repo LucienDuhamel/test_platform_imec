@@ -19,7 +19,7 @@ from .valid_msg import (
     mem_cmp_match,
     valid_wr_msg,
     valid_rd_msg,
-    valid_cmp_msg,
+    valid_cmp,
 )
 
 from .status_msg import (
@@ -35,8 +35,8 @@ __all__ = [
     "no_rd_data",
     "unknown_cmd",
     "error_parsing_line",
-    "wrong_config_parameters",
-    "error_wr_msg",     
+    "wrong_config_parameters", 
+    "error_wr_msg",
     "error_rd_msg",
     "reg_cmp_mismatch",
     "mem_cmp_mismatch",
@@ -46,9 +46,14 @@ __all__ = [
     "mem_cmp_match",
     "valid_wr_msg",
     "valid_rd_msg",
-    "valid_cmp_msg",
+    "valid_cmp",
     
     "executing_line_msg",
-    "sending_msg",
+    "sending_msg",  
     "starting_cmp",
 ]
+
+
+
+
+

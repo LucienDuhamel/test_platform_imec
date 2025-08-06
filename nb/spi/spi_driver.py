@@ -1,7 +1,17 @@
+from ..nb_pkg import SPI_Object
 from . import spi_pkg
 
 
-def cnfg_master_spi(AxiQspi, clk_phase=0, clk_pol=0):
+def cnfg_master_spi(AxiQspi: SPI_Object, clk_phase: int=0, clk_pol: int=0)-> int:
+    """
+    Configures the SPI master interface.
+    Args:
+        AxiQspi (SPI_Object): SPI interface object.
+        clk_phase (int): Clock phase (0 or 1).
+        clk_pol (int): Clock polarity (0 or 1).
+    Returns:
+        int: 0 on success.  
+    """
     print("Configure device")
     # Reset the SPI device
     AxiQspi.write(spi_pkg.XSP_SRR_OFFSET, spi_pkg.XSP_SRR_RESET_MASK)
@@ -25,7 +35,15 @@ def cnfg_master_spi(AxiQspi, clk_phase=0, clk_pol=0):
 
     return 0
 
-def xfer(AxiQspi, packet):
+def xfer(AxiQspi: SPI_Object, packet:list[int]) -> list[int]:
+    """
+    Transfers data over SPI and returns the response.
+    Args:
+        AxiQspi (SPI_Object): SPI interface object.
+        packet (list[int]): List of data bytes to send.
+    Returns:
+        list[int]: List of received data bytes.
+    """
     # print("TransferData")
     for data in packet:
         AxiQspi.write(spi_pkg.XSP_SSR_OFFSET, 0xFFFFFFFE)
