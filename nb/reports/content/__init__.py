@@ -1,7 +1,7 @@
 from .error_msg import (
     wrong_wr_parameters,
     test_config_error,
-    number_of_packets_mismatch,
+    number_of_bytes_mismatch,
     no_rd_data,
     unknown_cmd,
     error_parsing_line,
